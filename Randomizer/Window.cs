@@ -9,7 +9,7 @@ namespace Randomizer
     {
         Bitmap _bmp;
         Graphics _draw;
-        int _cellSize, _actualSize;
+        int _cellSize, _actualSize, _positiveSpins, _negativeSpins;
         int _quantity;
         Spin[,] _spins;
         bool drawing;
@@ -30,9 +30,19 @@ namespace Randomizer
         private void btnCreate_Click(object sender, EventArgs e)
         {
             _draw.Clear(Color.Wheat);
+
+            _positiveSpins = Convert.ToInt32(txtPositiveSpins.Text);
+            _negativeSpins = Convert.ToInt32(txtNegativeSpins.Text);
+
             _actualSize = Convert.ToInt32(cmbAmount.SelectedItem);
             _cellSize = _actualSize + 1;
             _quantity = (int)Math.Pow(_actualSize, 2);
+
+            if ((_positiveSpins + _negativeSpins) != _quantity)
+            {
+                
+            }
+
             labelTotal.Text = _quantity.ToString();
 
             _spins = InitSpins(_actualSize);
