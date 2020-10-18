@@ -8,8 +8,15 @@ namespace Randomizer
 {
     struct Spin
     {
-        public int X { get; set; }
-        public int Y { get; set; }
+        public double X { get; set; }
+        public double Y { get; set; }
         public int Sign { get; set; }
+
+        public Spin(double x, double y, int sign)
+        {
+            X = x;
+            Y = y;
+            Sign = sign;
+        }
     }
 }
