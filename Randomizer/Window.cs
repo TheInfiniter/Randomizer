@@ -95,7 +95,10 @@ namespace Randomizer
             SolidBrush brushRed = new SolidBrush(Color.Red);
             SolidBrush brushNavy = new SolidBrush(Color.Navy);
 
-            double radius = size * 0.3;
+            double width = pcbMain.Width;
+            double step = width / (size + 1);
+
+            double radius = step * 0.3;
 
             for (int i = 0; i < size; i++)
             {

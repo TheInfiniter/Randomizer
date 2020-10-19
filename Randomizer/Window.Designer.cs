@@ -36,15 +36,15 @@
             this.txtNegativeSpins = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.radioAllSpins = new System.Windows.Forms.RadioButton();
+            this.radioNegativeSpins = new System.Windows.Forms.RadioButton();
+            this.radioPositiveSpins = new System.Windows.Forms.RadioButton();
             this.label4 = new System.Windows.Forms.Label();
             this.labelTotal = new System.Windows.Forms.Label();
             this.cmbAmount = new System.Windows.Forms.ComboBox();
             this.radioFull = new System.Windows.Forms.RadioButton();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.radioNotFull = new System.Windows.Forms.RadioButton();
-            this.radioNegativeSpins = new System.Windows.Forms.RadioButton();
-            this.radioPositiveSpins = new System.Windows.Forms.RadioButton();
-            this.radioAllSpins = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.pcbMain)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -52,16 +52,16 @@
             // 
             // pcbMain
             // 
-            this.pcbMain.Location = new System.Drawing.Point(12, 12);
+            this.pcbMain.Location = new System.Drawing.Point(12, 13);
             this.pcbMain.Name = "pcbMain";
-            this.pcbMain.Size = new System.Drawing.Size(512, 512);
+            this.pcbMain.Size = new System.Drawing.Size(720, 720);
             this.pcbMain.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
             this.pcbMain.TabIndex = 0;
             this.pcbMain.TabStop = false;
             // 
             // btnCreate
             // 
-            this.btnCreate.Location = new System.Drawing.Point(538, 262);
+            this.btnCreate.Location = new System.Drawing.Point(757, 262);
             this.btnCreate.Name = "btnCreate";
             this.btnCreate.Size = new System.Drawing.Size(141, 41);
             this.btnCreate.TabIndex = 1;
@@ -71,7 +71,7 @@
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(530, 12);
+            this.label1.Location = new System.Drawing.Point(749, 12);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(112, 20);
             this.label1.TabIndex = 2;
@@ -121,79 +121,25 @@
             this.groupBox1.Controls.Add(this.txtNegativeSpins);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Location = new System.Drawing.Point(530, 116);
+            this.groupBox1.Location = new System.Drawing.Point(749, 116);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(163, 140);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Спины";
             // 
-            // label4
+            // radioAllSpins
             // 
-            this.label4.Location = new System.Drawing.Point(533, 36);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(109, 20);
-            this.label4.TabIndex = 9;
-            this.label4.Text = "Количество частиц";
-            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // labelTotal
-            // 
-            this.labelTotal.Location = new System.Drawing.Point(645, 36);
-            this.labelTotal.Name = "labelTotal";
-            this.labelTotal.Size = new System.Drawing.Size(48, 20);
-            this.labelTotal.TabIndex = 10;
-            this.labelTotal.Text = "0";
-            this.labelTotal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // cmbAmount
-            // 
-            this.cmbAmount.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbAmount.FormattingEnabled = true;
-            this.cmbAmount.Items.AddRange(new object[] {
-            "20",
-            "50",
-            "100",
-            "200",
-            "500"});
-            this.cmbAmount.Location = new System.Drawing.Point(648, 13);
-            this.cmbAmount.Name = "cmbAmount";
-            this.cmbAmount.Size = new System.Drawing.Size(45, 21);
-            this.cmbAmount.TabIndex = 11;
-            // 
-            // radioFull
-            // 
-            this.radioFull.AutoSize = true;
-            this.radioFull.Checked = true;
-            this.radioFull.Location = new System.Drawing.Point(6, 19);
-            this.radioFull.Name = "radioFull";
-            this.radioFull.Size = new System.Drawing.Size(63, 17);
-            this.radioFull.TabIndex = 12;
-            this.radioFull.TabStop = true;
-            this.radioFull.Text = "Полное";
-            this.radioFull.UseVisualStyleBackColor = true;
-            this.radioFull.CheckedChanged += new System.EventHandler(this.radioFull_CheckedChanged);
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.radioNotFull);
-            this.groupBox2.Controls.Add(this.radioFull);
-            this.groupBox2.Location = new System.Drawing.Point(530, 66);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(163, 44);
-            this.groupBox2.TabIndex = 13;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Рисование";
-            // 
-            // radioNotFull
-            // 
-            this.radioNotFull.AutoSize = true;
-            this.radioNotFull.Location = new System.Drawing.Point(76, 19);
-            this.radioNotFull.Name = "radioNotFull";
-            this.radioNotFull.Size = new System.Drawing.Size(75, 17);
-            this.radioNotFull.TabIndex = 13;
-            this.radioNotFull.Text = "Неполное";
-            this.radioNotFull.UseVisualStyleBackColor = true;
+            this.radioAllSpins.AutoSize = true;
+            this.radioAllSpins.Checked = true;
+            this.radioAllSpins.Location = new System.Drawing.Point(9, 68);
+            this.radioAllSpins.Name = "radioAllSpins";
+            this.radioAllSpins.Size = new System.Drawing.Size(79, 17);
+            this.radioAllSpins.TabIndex = 16;
+            this.radioAllSpins.TabStop = true;
+            this.radioAllSpins.Text = "Все спины";
+            this.radioAllSpins.UseVisualStyleBackColor = true;
+            this.radioAllSpins.CheckedChanged += new System.EventHandler(this.radioAllSpins_CheckedChanged);
             // 
             // radioNegativeSpins
             // 
@@ -215,23 +161,78 @@
             this.radioPositiveSpins.Text = "Только положительные";
             this.radioPositiveSpins.UseVisualStyleBackColor = true;
             // 
-            // radioAllSpins
+            // label4
             // 
-            this.radioAllSpins.AutoSize = true;
-            this.radioAllSpins.Checked = true;
-            this.radioAllSpins.Location = new System.Drawing.Point(9, 68);
-            this.radioAllSpins.Name = "radioAllSpins";
-            this.radioAllSpins.Size = new System.Drawing.Size(79, 17);
-            this.radioAllSpins.TabIndex = 16;
-            this.radioAllSpins.Text = "Все спины";
-            this.radioAllSpins.UseVisualStyleBackColor = true;
-            this.radioAllSpins.CheckedChanged += new System.EventHandler(this.radioAllSpins_CheckedChanged);
+            this.label4.Location = new System.Drawing.Point(752, 36);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(109, 20);
+            this.label4.TabIndex = 9;
+            this.label4.Text = "Количество частиц";
+            this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // labelTotal
+            // 
+            this.labelTotal.Location = new System.Drawing.Point(864, 36);
+            this.labelTotal.Name = "labelTotal";
+            this.labelTotal.Size = new System.Drawing.Size(48, 20);
+            this.labelTotal.TabIndex = 10;
+            this.labelTotal.Text = "0";
+            this.labelTotal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // cmbAmount
+            // 
+            this.cmbAmount.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cmbAmount.FormattingEnabled = true;
+            this.cmbAmount.Items.AddRange(new object[] {
+            "20",
+            "50",
+            "100",
+            "200",
+            "500"});
+            this.cmbAmount.Location = new System.Drawing.Point(867, 13);
+            this.cmbAmount.Name = "cmbAmount";
+            this.cmbAmount.Size = new System.Drawing.Size(45, 21);
+            this.cmbAmount.TabIndex = 11;
+            // 
+            // radioFull
+            // 
+            this.radioFull.AutoSize = true;
+            this.radioFull.Checked = true;
+            this.radioFull.Location = new System.Drawing.Point(6, 19);
+            this.radioFull.Name = "radioFull";
+            this.radioFull.Size = new System.Drawing.Size(63, 17);
+            this.radioFull.TabIndex = 12;
+            this.radioFull.TabStop = true;
+            this.radioFull.Text = "Полное";
+            this.radioFull.UseVisualStyleBackColor = true;
+            this.radioFull.CheckedChanged += new System.EventHandler(this.radioFull_CheckedChanged);
+            // 
+            // groupBox2
+            // 
+            this.groupBox2.Controls.Add(this.radioNotFull);
+            this.groupBox2.Controls.Add(this.radioFull);
+            this.groupBox2.Location = new System.Drawing.Point(749, 66);
+            this.groupBox2.Name = "groupBox2";
+            this.groupBox2.Size = new System.Drawing.Size(163, 44);
+            this.groupBox2.TabIndex = 13;
+            this.groupBox2.TabStop = false;
+            this.groupBox2.Text = "Рисование";
+            // 
+            // radioNotFull
+            // 
+            this.radioNotFull.AutoSize = true;
+            this.radioNotFull.Location = new System.Drawing.Point(76, 19);
+            this.radioNotFull.Name = "radioNotFull";
+            this.radioNotFull.Size = new System.Drawing.Size(75, 17);
+            this.radioNotFull.TabIndex = 13;
+            this.radioNotFull.Text = "Неполное";
+            this.radioNotFull.UseVisualStyleBackColor = true;
             // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(705, 539);
+            this.ClientSize = new System.Drawing.Size(930, 748);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.cmbAmount);
             this.Controls.Add(this.labelTotal);
