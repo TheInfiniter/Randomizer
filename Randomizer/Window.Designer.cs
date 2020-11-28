@@ -31,10 +31,6 @@
             this.pcbMain = new System.Windows.Forms.PictureBox();
             this.btnCreate = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
-            this.txtPositiveSpins = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.txtNegativeSpins = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.radioAllSpins = new System.Windows.Forms.RadioButton();
             this.radioNegativeSpins = new System.Windows.Forms.RadioButton();
@@ -42,28 +38,26 @@
             this.label4 = new System.Windows.Forms.Label();
             this.labelTotal = new System.Windows.Forms.Label();
             this.cmbAmount = new System.Windows.Forms.ComboBox();
-            this.radioFull = new System.Windows.Forms.RadioButton();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.radioNotFull = new System.Windows.Forms.RadioButton();
+            this.BtnTestRotate = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pcbMain)).BeginInit();
             this.groupBox1.SuspendLayout();
-            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // pcbMain
             // 
-            this.pcbMain.Location = new System.Drawing.Point(12, 13);
+            this.pcbMain.Location = new System.Drawing.Point(13, 16);
+            this.pcbMain.Margin = new System.Windows.Forms.Padding(4);
             this.pcbMain.Name = "pcbMain";
-            this.pcbMain.Size = new System.Drawing.Size(720, 720);
-            this.pcbMain.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.pcbMain.Size = new System.Drawing.Size(978, 779);
             this.pcbMain.TabIndex = 0;
             this.pcbMain.TabStop = false;
             // 
             // btnCreate
             // 
-            this.btnCreate.Location = new System.Drawing.Point(757, 262);
+            this.btnCreate.Location = new System.Drawing.Point(1002, 189);
+            this.btnCreate.Margin = new System.Windows.Forms.Padding(4);
             this.btnCreate.Name = "btnCreate";
-            this.btnCreate.Size = new System.Drawing.Size(141, 41);
+            this.btnCreate.Size = new System.Drawing.Size(212, 50);
             this.btnCreate.TabIndex = 1;
             this.btnCreate.Text = "Создать";
             this.btnCreate.UseVisualStyleBackColor = true;
@@ -71,59 +65,24 @@
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(749, 12);
+            this.label1.Location = new System.Drawing.Point(999, 15);
+            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(112, 20);
+            this.label1.Size = new System.Drawing.Size(148, 25);
             this.label1.TabIndex = 2;
             this.label1.Text = "Сторона ячейки";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // txtPositiveSpins
-            // 
-            this.txtPositiveSpins.Location = new System.Drawing.Point(105, 16);
-            this.txtPositiveSpins.Name = "txtPositiveSpins";
-            this.txtPositiveSpins.Size = new System.Drawing.Size(45, 20);
-            this.txtPositiveSpins.TabIndex = 5;
-            this.txtPositiveSpins.Text = "20";
-            // 
-            // label2
-            // 
-            this.label2.Location = new System.Drawing.Point(6, 16);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(93, 20);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Положительные";
-            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // txtNegativeSpins
-            // 
-            this.txtNegativeSpins.Location = new System.Drawing.Point(105, 42);
-            this.txtNegativeSpins.Name = "txtNegativeSpins";
-            this.txtNegativeSpins.Size = new System.Drawing.Size(45, 20);
-            this.txtNegativeSpins.TabIndex = 7;
-            this.txtNegativeSpins.Text = "20";
-            // 
-            // label3
-            // 
-            this.label3.Location = new System.Drawing.Point(6, 42);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(93, 20);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Отрицательные";
-            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // groupBox1
             // 
             this.groupBox1.Controls.Add(this.radioAllSpins);
             this.groupBox1.Controls.Add(this.radioNegativeSpins);
-            this.groupBox1.Controls.Add(this.txtPositiveSpins);
             this.groupBox1.Controls.Add(this.radioPositiveSpins);
-            this.groupBox1.Controls.Add(this.txtNegativeSpins);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Location = new System.Drawing.Point(749, 116);
+            this.groupBox1.Location = new System.Drawing.Point(1002, 73);
+            this.groupBox1.Margin = new System.Windows.Forms.Padding(4);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(163, 140);
+            this.groupBox1.Padding = new System.Windows.Forms.Padding(4);
+            this.groupBox1.Size = new System.Drawing.Size(212, 108);
             this.groupBox1.TabIndex = 8;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Спины";
@@ -132,9 +91,10 @@
             // 
             this.radioAllSpins.AutoSize = true;
             this.radioAllSpins.Checked = true;
-            this.radioAllSpins.Location = new System.Drawing.Point(9, 68);
+            this.radioAllSpins.Location = new System.Drawing.Point(8, 23);
+            this.radioAllSpins.Margin = new System.Windows.Forms.Padding(4);
             this.radioAllSpins.Name = "radioAllSpins";
-            this.radioAllSpins.Size = new System.Drawing.Size(79, 17);
+            this.radioAllSpins.Size = new System.Drawing.Size(98, 21);
             this.radioAllSpins.TabIndex = 16;
             this.radioAllSpins.TabStop = true;
             this.radioAllSpins.Text = "Все спины";
@@ -144,9 +104,10 @@
             // radioNegativeSpins
             // 
             this.radioNegativeSpins.AutoSize = true;
-            this.radioNegativeSpins.Location = new System.Drawing.Point(9, 114);
+            this.radioNegativeSpins.Location = new System.Drawing.Point(8, 79);
+            this.radioNegativeSpins.Margin = new System.Windows.Forms.Padding(4);
             this.radioNegativeSpins.Name = "radioNegativeSpins";
-            this.radioNegativeSpins.Size = new System.Drawing.Size(143, 17);
+            this.radioNegativeSpins.Size = new System.Drawing.Size(183, 21);
             this.radioNegativeSpins.TabIndex = 15;
             this.radioNegativeSpins.Text = "Только отрицательные";
             this.radioNegativeSpins.UseVisualStyleBackColor = true;
@@ -154,27 +115,30 @@
             // radioPositiveSpins
             // 
             this.radioPositiveSpins.AutoSize = true;
-            this.radioPositiveSpins.Location = new System.Drawing.Point(9, 91);
+            this.radioPositiveSpins.Location = new System.Drawing.Point(8, 51);
+            this.radioPositiveSpins.Margin = new System.Windows.Forms.Padding(4);
             this.radioPositiveSpins.Name = "radioPositiveSpins";
-            this.radioPositiveSpins.Size = new System.Drawing.Size(146, 17);
+            this.radioPositiveSpins.Size = new System.Drawing.Size(185, 21);
             this.radioPositiveSpins.TabIndex = 14;
             this.radioPositiveSpins.Text = "Только положительные";
             this.radioPositiveSpins.UseVisualStyleBackColor = true;
             // 
             // label4
             // 
-            this.label4.Location = new System.Drawing.Point(752, 36);
+            this.label4.Location = new System.Drawing.Point(999, 44);
+            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(109, 20);
+            this.label4.Size = new System.Drawing.Size(148, 25);
             this.label4.TabIndex = 9;
             this.label4.Text = "Количество частиц";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // labelTotal
             // 
-            this.labelTotal.Location = new System.Drawing.Point(864, 36);
+            this.labelTotal.Location = new System.Drawing.Point(1155, 44);
+            this.labelTotal.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelTotal.Name = "labelTotal";
-            this.labelTotal.Size = new System.Drawing.Size(48, 20);
+            this.labelTotal.Size = new System.Drawing.Size(59, 25);
             this.labelTotal.TabIndex = 10;
             this.labelTotal.Text = "0";
             this.labelTotal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -189,51 +153,29 @@
             "100",
             "200",
             "500"});
-            this.cmbAmount.Location = new System.Drawing.Point(867, 13);
+            this.cmbAmount.Location = new System.Drawing.Point(1155, 16);
+            this.cmbAmount.Margin = new System.Windows.Forms.Padding(4);
             this.cmbAmount.Name = "cmbAmount";
-            this.cmbAmount.Size = new System.Drawing.Size(45, 21);
+            this.cmbAmount.Size = new System.Drawing.Size(59, 24);
             this.cmbAmount.TabIndex = 11;
             // 
-            // radioFull
+            // BtnTestRotate
             // 
-            this.radioFull.AutoSize = true;
-            this.radioFull.Checked = true;
-            this.radioFull.Location = new System.Drawing.Point(6, 19);
-            this.radioFull.Name = "radioFull";
-            this.radioFull.Size = new System.Drawing.Size(63, 17);
-            this.radioFull.TabIndex = 12;
-            this.radioFull.TabStop = true;
-            this.radioFull.Text = "Полное";
-            this.radioFull.UseVisualStyleBackColor = true;
-            this.radioFull.CheckedChanged += new System.EventHandler(this.radioFull_CheckedChanged);
-            // 
-            // groupBox2
-            // 
-            this.groupBox2.Controls.Add(this.radioNotFull);
-            this.groupBox2.Controls.Add(this.radioFull);
-            this.groupBox2.Location = new System.Drawing.Point(749, 66);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(163, 44);
-            this.groupBox2.TabIndex = 13;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Рисование";
-            // 
-            // radioNotFull
-            // 
-            this.radioNotFull.AutoSize = true;
-            this.radioNotFull.Location = new System.Drawing.Point(76, 19);
-            this.radioNotFull.Name = "radioNotFull";
-            this.radioNotFull.Size = new System.Drawing.Size(75, 17);
-            this.radioNotFull.TabIndex = 13;
-            this.radioNotFull.Text = "Неполное";
-            this.radioNotFull.UseVisualStyleBackColor = true;
+            this.BtnTestRotate.Location = new System.Drawing.Point(1002, 247);
+            this.BtnTestRotate.Margin = new System.Windows.Forms.Padding(4);
+            this.BtnTestRotate.Name = "BtnTestRotate";
+            this.BtnTestRotate.Size = new System.Drawing.Size(212, 50);
+            this.BtnTestRotate.TabIndex = 14;
+            this.BtnTestRotate.Text = "вращай их!";
+            this.BtnTestRotate.UseVisualStyleBackColor = true;
+            this.BtnTestRotate.Click += new System.EventHandler(this.BtnTestRotate_Click);
             // 
             // Window
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(930, 748);
-            this.Controls.Add(this.groupBox2);
+            this.ClientSize = new System.Drawing.Size(1227, 808);
+            this.Controls.Add(this.BtnTestRotate);
             this.Controls.Add(this.cmbAmount);
             this.Controls.Add(this.labelTotal);
             this.Controls.Add(this.label4);
@@ -242,6 +184,7 @@
             this.Controls.Add(this.btnCreate);
             this.Controls.Add(this.pcbMain);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "Window";
@@ -249,10 +192,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.pcbMain)).EndInit();
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
@@ -261,20 +201,14 @@
         private System.Windows.Forms.PictureBox pcbMain;
         private System.Windows.Forms.Button btnCreate;
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.TextBox txtPositiveSpins;
-        private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.TextBox txtNegativeSpins;
-        private System.Windows.Forms.Label label3;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label labelTotal;
         private System.Windows.Forms.ComboBox cmbAmount;
-        private System.Windows.Forms.RadioButton radioFull;
-        private System.Windows.Forms.GroupBox groupBox2;
-        private System.Windows.Forms.RadioButton radioNotFull;
         private System.Windows.Forms.RadioButton radioAllSpins;
         private System.Windows.Forms.RadioButton radioNegativeSpins;
         private System.Windows.Forms.RadioButton radioPositiveSpins;
+        private System.Windows.Forms.Button BtnTestRotate;
     }
 }
 

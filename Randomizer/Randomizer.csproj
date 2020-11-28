@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="RandomType.cs" />
     <Compile Include="Spin.cs" />
     <Compile Include="Window.cs">
       <SubType>Form</SubType>

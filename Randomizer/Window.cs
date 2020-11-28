@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -14,6 +13,7 @@ namespace Randomizer
         Spin[,] _spins;
         bool drawing;
         Random rand;
+        RandomType generate;
 
         public Window()
         {
@@ -24,6 +24,9 @@ namespace Randomizer
             cmbAmount.SelectedIndex = 0;
             drawing = true;
 
+            _positiveSpins = 0;
+            _negativeSpins = 0;
+
             rand = new Random();
         }
 
@@ -31,23 +34,15 @@ namespace Randomizer
         {
             _draw.Clear(Color.Wheat);
 
-            _positiveSpins = Convert.ToInt32(txtPositiveSpins.Text);
-            _negativeSpins = Convert.ToInt32(txtNegativeSpins.Text);
-
             _actualSize = Convert.ToInt32(cmbAmount.SelectedItem);
-            _cellSize = _actualSize + 1;
+            _cellSize = _actualSize + 2;
             _quantity = (int)Math.Pow(_actualSize, 2);
-
-            if ((_positiveSpins + _negativeSpins) != _quantity)
-            {
-                
-            }
 
             labelTotal.Text = _quantity.ToString();
 
-            _spins = InitSpins(_actualSize);
+            _spins = InitSpins(_cellSize);
             DrawGrid(_cellSize);
-            DrawSpins(_spins, _actualSize);
+            DrawSpins(_spins, _cellSize);
 
             pcbMain.Image = _bmp;
         }
@@ -55,32 +50,19 @@ namespace Randomizer
         private void DrawGrid(int size)
         {
             Pen pen = new Pen(Color.Black, 1);
+            size -= 1;
             double width = pcbMain.Width, height = pcbMain.Height;
-            double step = width / size;
+            double widthStep = width / size;
+            double heightStep = height / size;
 
-            if (drawing)
+            for (int i = 1; i < width - 1; i++)
             {
-                for (int i = 1; i < width; i++)
-                {
-                    _draw.DrawLine(pen, (float)(i * step), 0, (float)(i * step), (float)(height));
-                }
-
-                for (int i = 1; i < height; i++)
-                {
-                    _draw.DrawLine(pen, 0, (float)(i * step), (float)(width), (float)(i * step));
-                }
+                _draw.DrawLine(pen, (float)(i * widthStep), 0, (float)(i * widthStep), (float)(height));
             }
-            else
-            {
-                for (int i = 1; i < width; i++)
-                {
-                    _draw.DrawLine(pen, (float)(i * step), (float)step, (float)(i * step), (float)(height - step));
-                }
 
-                for (int i = 1; i < height; i++)
-                {
-                    _draw.DrawLine(pen, (float)step, (float)(i * step), (float)(width - step), (float)(i * step));
-                }
+            for (int i = 1; i < height - 1; i++)
+            {
+                _draw.DrawLine(pen, 0, (float)(i * heightStep), (float)(width), (float)(i * heightStep));
             }
 
             pen = new Pen(Color.Crimson, 2);
@@ -94,11 +76,14 @@ namespace Randomizer
         {
             SolidBrush brushRed = new SolidBrush(Color.Red);
             SolidBrush brushNavy = new SolidBrush(Color.Navy);
+            SolidBrush brushGold = new SolidBrush(Color.Gold);
 
             double width = pcbMain.Width;
-            double step = width / (size + 1);
+            double height = pcbMain.Height;
+            double widthStep = width / (size);
+            double heightStep = height / (size);
 
-            double radius = step * 0.3;
+            double radius = widthStep * 0.25;
 
             for (int i = 0; i < size; i++)
             {
@@ -108,9 +93,13 @@ namespace Randomizer
                     {
                         _draw.FillEllipse(brushRed, (float)(spins[i, j].X - radius), (float)(spins[i, j].Y - radius), (float)radius * 2, (float)radius * 2);
                     }
-                    else
+                    else if (spins[i, j].Sign == -1)
                     {
                         _draw.FillEllipse(brushNavy, (float)(spins[i, j].X - radius), (float)(spins[i, j].Y - radius), (float)radius * 2, (float)radius * 2);
+                    }
+                    else
+                    {
+                        _draw.FillEllipse(brushGold, (float)(spins[i, j].X - radius), (float)(spins[i, j].Y - radius), (float)radius * 2, (float)radius * 2);
                     }
                 }
             }
@@ -120,21 +109,32 @@ namespace Randomizer
         {
             Spin[,] spins = new Spin[size, size];
 
-            double width = pcbMain.Width;
-            double step = width / (size + 1);
+            //size += 2;
 
-            double x = 0, y = step;
+            double width = pcbMain.Width;
+            double height = pcbMain.Height;
+            double widthStep = width / (size - 1);
+            double heightStep = height / (size - 1);
+
+            double x = 0, y = 0;
             int sign;
 
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
                 {
-                    x += step;
-                    sign = GetRandomInt();
+                    if ((j == 0 | j == (size - 1)) | (i == 0 | i == (size - 1)))
+                    {
+                        sign = 0;
+                    }
+                    else
+                    {
+                        sign = GetRandomInt();
+                    }
                     spins[i, j] = new Spin(x, y, sign);
+                    x += widthStep;
                 }
-                y += step;
+                y += heightStep;
                 x = 0;
             }
 
@@ -153,15 +153,34 @@ namespace Randomizer
             return res;
         }
 
-        private void radioFull_CheckedChanged(object sender, EventArgs e)
+        private void BtnTestRotate_Click(object sender, EventArgs e)
         {
-            drawing = radioFull.Checked;
+            _spins = RotateSpin(_spins);
+
+            DrawGrid(_cellSize);
+            DrawSpins(_spins, _cellSize);
+
+            pcbMain.Image = _bmp;
         }
 
         private void radioAllSpins_CheckedChanged(object sender, EventArgs e)
         {
-            txtPositiveSpins.Enabled = radioAllSpins.Checked;
-            txtNegativeSpins.Enabled = radioAllSpins.Checked;
+            
+        }
+
+        private Spin[,] RotateSpin(Spin[,] spins)
+        {
+            int row = rand.Next(0, spins.GetLength(0));
+            int column = rand.Next(0, spins.GetLength(1));
+
+            /*
+            LabelRow.Text = row.ToString();
+            LabelColumn.Text = column.ToString();
+            */
+
+            spins[row, column].Sign = -spins[row, column].Sign;
+
+            return spins;
         }
     }
 }
