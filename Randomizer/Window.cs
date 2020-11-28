@@ -13,7 +13,7 @@ namespace Randomizer
         Spin[,] _spins;
         bool drawing;
         Random rand;
-        RandomType generate;
+        SpinType generate;
 
         public Window()
         {
@@ -23,9 +23,6 @@ namespace Randomizer
             _draw = Graphics.FromImage(_bmp);
             cmbAmount.SelectedIndex = 0;
             drawing = true;
-
-            _positiveSpins = 0;
-            _negativeSpins = 0;
 
             rand = new Random();
         }
@@ -40,11 +37,44 @@ namespace Randomizer
 
             labelTotal.Text = _quantity.ToString();
 
-            _spins = InitSpins(_cellSize);
+            if(radioAllSpins.Checked)
+            {
+                generate = SpinType.All;
+            }
+            else if (radioPositiveSpins.Checked)
+            {
+                generate = SpinType.Positive;
+            }
+            else if (radioNegativeSpins.Checked)
+            {
+                generate = SpinType.Negative;
+            }
+
+            _spins = InitSpins(_cellSize, generate);
             DrawGrid(_cellSize);
             DrawSpins(_spins, _cellSize);
 
             pcbMain.Image = _bmp;
+            
+            int positiveSpins = 0;
+            int negativeSpins = 0;
+            for (int i = 0; i < _spins.GetLength(0); i++)
+            {
+                for (int j = 0; j < _spins.GetLength(1); j++)
+                {
+                    if (_spins[i, j].Sign == 1)
+                    {
+                        positiveSpins += 1;
+                    }
+                    if (_spins[i, j].Sign == -1)
+                    {
+                        negativeSpins += 1;
+                    }
+                }
+            }
+            LabelNegative.Text = negativeSpins.ToString();
+            LabelPositive.Text = positiveSpins.ToString();
+            
         }
 
         private void DrawGrid(int size)
@@ -105,7 +135,7 @@ namespace Randomizer
             }
         }
 
-        private Spin[,] InitSpins(int size)
+        private Spin[,] InitSpins(int size, SpinType type)
         {
             Spin[,] spins = new Spin[size, size];
 
@@ -129,7 +159,7 @@ namespace Randomizer
                     }
                     else
                     {
-                        sign = GetRandomInt();
+                        sign = GetRandomInt(ref _positiveSpins, ref _negativeSpins, type);
                     }
                     spins[i, j] = new Spin(x, y, sign);
                     x += widthStep;
@@ -141,15 +171,47 @@ namespace Randomizer
             return spins;
         }
 
-        private int GetRandomInt()
+        private int GetRandomInt(ref int positive, ref int negative, SpinType type)
         {
             int res = 0;
 
+            switch(type)
+            {
+                case SpinType.Positive:
+                    {
+                        return 1;
+                    }
+                case SpinType.Negative:
+                    {
+                        return -1;
+                    }
+                case SpinType.All:
+                    {
+                        do
+                        {
+                            res = rand.Next(-1, 2);
+
+                            if (res == 1 & positive <= (_quantity / 2))
+                            {
+                                positive += 1;
+                                break;
+                            }
+                            if (res == -1 & negative <= (_quantity / 2))
+                            {
+                                negative += 1;
+                                break;
+                            }
+                        } while (res == 0);
+                        
+                        break;
+                    }
+            }
+            /*
             while(res == 0)
             {
                 res = rand.Next(-1, 2);
             }
-
+            */
             return res;
         }
 

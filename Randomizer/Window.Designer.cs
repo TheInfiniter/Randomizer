@@ -39,6 +39,10 @@
             this.labelTotal = new System.Windows.Forms.Label();
             this.cmbAmount = new System.Windows.Forms.ComboBox();
             this.BtnTestRotate = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.LabelPositive = new System.Windows.Forms.Label();
+            this.LabelNegative = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pcbMain)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
@@ -170,11 +174,55 @@
             this.BtnTestRotate.UseVisualStyleBackColor = true;
             this.BtnTestRotate.Click += new System.EventHandler(this.BtnTestRotate_Click);
             // 
+            // label2
+            // 
+            this.label2.Location = new System.Drawing.Point(999, 301);
+            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(148, 25);
+            this.label2.TabIndex = 15;
+            this.label2.Text = "положительные";
+            this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label3
+            // 
+            this.label3.Location = new System.Drawing.Point(999, 326);
+            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(148, 25);
+            this.label3.TabIndex = 16;
+            this.label3.Text = "отрицательные";
+            this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelPositive
+            // 
+            this.LabelPositive.Location = new System.Drawing.Point(1155, 301);
+            this.LabelPositive.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.LabelPositive.Name = "LabelPositive";
+            this.LabelPositive.Size = new System.Drawing.Size(59, 25);
+            this.LabelPositive.TabIndex = 17;
+            this.LabelPositive.Text = "0";
+            this.LabelPositive.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelNegative
+            // 
+            this.LabelNegative.Location = new System.Drawing.Point(1155, 326);
+            this.LabelNegative.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.LabelNegative.Name = "LabelNegative";
+            this.LabelNegative.Size = new System.Drawing.Size(59, 25);
+            this.LabelNegative.TabIndex = 18;
+            this.LabelNegative.Text = "0";
+            this.LabelNegative.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1227, 808);
+            this.Controls.Add(this.LabelNegative);
+            this.Controls.Add(this.LabelPositive);
+            this.Controls.Add(this.label3);
+            this.Controls.Add(this.label2);
             this.Controls.Add(this.BtnTestRotate);
             this.Controls.Add(this.cmbAmount);
             this.Controls.Add(this.labelTotal);
@@ -209,6 +257,10 @@
         private System.Windows.Forms.RadioButton radioNegativeSpins;
         private System.Windows.Forms.RadioButton radioPositiveSpins;
         private System.Windows.Forms.Button BtnTestRotate;
+        private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Label LabelPositive;
+        private System.Windows.Forms.Label LabelNegative;
     }
 }
 

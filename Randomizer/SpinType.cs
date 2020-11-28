@@ -1,8 +1,8 @@
 ﻿namespace Randomizer
 {
-    public enum RandomType
+    public enum SpinType
     {
-        AllSpins,
+        All,
         Negative,
         Positive
     }
