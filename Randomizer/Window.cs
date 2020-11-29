@@ -8,9 +8,32 @@ namespace Randomizer
     {
         Bitmap _bmp;
         Graphics _draw;
-        int _cellSize, _actualSize, _positiveSpins, _negativeSpins;
+
+        /// <summary>
+        /// Сторона ячейки (actualSize + 2)
+        /// </summary>
+        int _cellSize;
+
+        /// <summary>
+        /// Количество спинов в одном измерении
+        /// </summary>
+        int _actualSize;
+        int _positiveSpins, _negativeSpins;
+
+        /// <summary>
+        /// Общее количество используемых спинов
+        /// </summary>
         int _quantity;
-        Spin[,] _spins, _newSpins;
+
+        /// <summary>
+        /// Исходное состояние спинов
+        /// </summary>
+        Spin[,] _spins;
+
+        /// <summary>
+        /// Новое состояние спинов
+        /// </summary>
+        Spin[,] _newSpins;
         Random rand;
 
         public Window()
@@ -19,7 +42,8 @@ namespace Randomizer
 
             _bmp = new Bitmap(pcbMain.Width, pcbMain.Height);
             _draw = Graphics.FromImage(_bmp);
-            cmbAmount.SelectedIndex = 0;
+            _draw.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            CmbAmount.SelectedIndex = 0;
 
             rand = new Random();
         }
@@ -28,14 +52,14 @@ namespace Randomizer
         {
             _draw.Clear(Color.Wheat);
 
-            _actualSize = Convert.ToInt32(cmbAmount.SelectedItem);
+            _actualSize = Convert.ToInt32(CmbAmount.SelectedItem);
             _cellSize = _actualSize + 2;
             _quantity = (int)Math.Pow(_actualSize, 2);
 
             _positiveSpins = 0;
             _negativeSpins = 0;
 
-            labelTotal.Text = _quantity.ToString();
+            LabelTotal.Text = _quantity.ToString();
 
             SpinType generate = SpinType.All;
 
@@ -58,6 +82,7 @@ namespace Randomizer
 
             pcbMain.Image = _bmp;
             
+            /*
             int positiveSpins = 0;
             int negativeSpins = 0;
             for (int i = 0; i < _spins.GetLength(0); i++)
@@ -76,6 +101,7 @@ namespace Randomizer
             }
             LabelNegative.Text = negativeSpins.ToString();
             LabelPositive.Text = positiveSpins.ToString();
+            */
         }
 
         private void DrawGrid(int size)
@@ -96,7 +122,7 @@ namespace Randomizer
                 _draw.DrawLine(pen, 0, (float)(i * heightStep), (float)(width), (float)(i * heightStep));
             }
 
-            pen = new Pen(Color.Crimson, 2);
+            pen = new Pen(Color.Black, 2);
             _draw.DrawLine(pen, 1, 0, 1, (float)height);
             _draw.DrawLine(pen, 0, 1, (float)width, 1);
             _draw.DrawLine(pen, (float)width - 1, 0, (float)width - 1, (float)height);
@@ -168,17 +194,18 @@ namespace Randomizer
         private Spin[,] GetRandomSign(Spin[,] spins, int size, SpinType type)
         {
             int row, column;
+            int tmp = (int)Math.Pow(_cellSize, 2);
 
             switch(type)
             {
                 case SpinType.All:
                     {
-                        for (int i = 0; i < _quantity / 2; i++)
+                        for (int i = 0; i < tmp / 2; i++)
                         {
                             while (true)
                             {
-                                row = rand.Next(1, size - 1);
-                                column = rand.Next(1, size - 1);
+                                row = rand.Next(0, size);
+                                column = rand.Next(0, size);
 
                                 if (spins[row, column].Sign == 0)
                                 {
@@ -188,12 +215,12 @@ namespace Randomizer
                             }
                         }
 
-                        for (int i = 0; i < _quantity / 2; i++)
+                        for (int i = 0; i < tmp / 2; i++)
                         {
                             while (true)
                             {
-                                row = rand.Next(1, size - 1);
-                                column = rand.Next(1, size - 1);
+                                row = rand.Next(0, size);
+                                column = rand.Next(0, size);
 
                                 if (spins[row, column].Sign == 0)
                                 {
@@ -206,9 +233,9 @@ namespace Randomizer
                     }
                 case SpinType.Positive:
                     {
-                        for (int i = 1; i < size - 1; i++)
+                        for (int i = 0; i < size; i++)
                         {
-                            for (int j = 1; j < size - 1; j++)
+                            for (int j = 0; j < size; j++)
                             {
                                 spins[i, j].Sign = 1;
                             }
@@ -217,9 +244,9 @@ namespace Randomizer
                     }
                 case SpinType.Negative:
                     {
-                        for (int i = 1; i < size - 1; i++)
+                        for (int i = 0; i < size; i++)
                         {
-                            for (int j = 1; j < size - 1; j++)
+                            for (int j = 0; j < size; j++)
                             {
                                 spins[i, j].Sign = -1;
                             }
@@ -231,14 +258,51 @@ namespace Randomizer
             return spins;
         }
 
-        private Spin[,] RotateSpin(Spin[,] spins)
+        private Spin[,] RotateSpin(Spin[,] spins, int row, int column)
         {
-            int row = rand.Next(0, spins.GetLength(0));
-            int column = rand.Next(0, spins.GetLength(1));
-
             spins[row, column].Sign = -spins[row, column].Sign;
 
             return spins;
+        }
+
+        private void Metropolis()
+        {
+            int row = rand.Next(1, _cellSize - 1);
+            int column = rand.Next(1, _cellSize - 1);
+
+            // энергия исходного состояния спина
+            int prevSum = _spins[(row - 1 + _cellSize) % _cellSize, column].Sign +
+                _spins[(row + 1 + _cellSize) % _cellSize, column].Sign +
+                _spins[row, (column - 1 + _cellSize) % _cellSize].Sign +
+                _spins[row, (column + 1 + _cellSize) % _cellSize].Sign;
+
+            _newSpins = RotateSpin(_spins, row, column); // переворот спина
+
+            // энергия нового состояния спина
+            int newSum = _newSpins[(row - 1 + _cellSize) % _cellSize, column].Sign +
+                _newSpins[(row + 1 + _cellSize) % _cellSize, column].Sign +
+                _newSpins[row, (column - 1 + _cellSize) % _cellSize].Sign +
+                _newSpins[row, (column + 1 + _cellSize) % _cellSize].Sign;
+
+            int diff = newSum - prevSum;
+            if (diff <= 0)
+            {
+                // доделать изменение состояния
+            }
+        }
+
+        private int GetEdge(int index, int length)
+        {
+            if (index == 0)
+            {
+                index = length - 2;
+            }
+            else if (index == length - 1)
+            {
+                index = 1;
+            }
+
+            return index;
         }
     }
 }

@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.pcbMain = new System.Windows.Forms.PictureBox();
             this.btnCreate = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
@@ -36,8 +37,8 @@
             this.radioNegativeSpins = new System.Windows.Forms.RadioButton();
             this.radioPositiveSpins = new System.Windows.Forms.RadioButton();
             this.label4 = new System.Windows.Forms.Label();
-            this.labelTotal = new System.Windows.Forms.Label();
-            this.cmbAmount = new System.Windows.Forms.ComboBox();
+            this.LabelTotal = new System.Windows.Forms.Label();
+            this.CmbAmount = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.LabelPositive = new System.Windows.Forms.Label();
@@ -46,7 +47,9 @@
             this.label5 = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label6 = new System.Windows.Forms.Label();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.TextCritT = new System.Windows.Forms.TextBox();
+            this.TimerAnimate = new System.Windows.Forms.Timer(this.components);
+            this.BtnStart = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.pcbMain)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -132,29 +135,29 @@
             this.label4.Text = "Количество частиц";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // labelTotal
+            // LabelTotal
             // 
-            this.labelTotal.Location = new System.Drawing.Point(866, 36);
-            this.labelTotal.Name = "labelTotal";
-            this.labelTotal.Size = new System.Drawing.Size(44, 20);
-            this.labelTotal.TabIndex = 10;
-            this.labelTotal.Text = "0";
-            this.labelTotal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.LabelTotal.Location = new System.Drawing.Point(866, 36);
+            this.LabelTotal.Name = "LabelTotal";
+            this.LabelTotal.Size = new System.Drawing.Size(44, 20);
+            this.LabelTotal.TabIndex = 10;
+            this.LabelTotal.Text = "0";
+            this.LabelTotal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // cmbAmount
+            // CmbAmount
             // 
-            this.cmbAmount.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbAmount.FormattingEnabled = true;
-            this.cmbAmount.Items.AddRange(new object[] {
+            this.CmbAmount.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CmbAmount.FormattingEnabled = true;
+            this.CmbAmount.Items.AddRange(new object[] {
             "20",
             "50",
             "100",
             "200",
             "500"});
-            this.cmbAmount.Location = new System.Drawing.Point(866, 13);
-            this.cmbAmount.Name = "cmbAmount";
-            this.cmbAmount.Size = new System.Drawing.Size(45, 21);
-            this.cmbAmount.TabIndex = 11;
+            this.CmbAmount.Location = new System.Drawing.Point(866, 13);
+            this.CmbAmount.Name = "CmbAmount";
+            this.CmbAmount.Size = new System.Drawing.Size(45, 21);
+            this.CmbAmount.TabIndex = 11;
             // 
             // label2
             // 
@@ -212,7 +215,7 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.label6);
-            this.groupBox2.Controls.Add(this.textBox1);
+            this.groupBox2.Controls.Add(this.TextCritT);
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.TxtMCS);
             this.groupBox2.Location = new System.Drawing.Point(752, 201);
@@ -231,26 +234,40 @@
             this.label6.Text = "Критическая Т";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // textBox1
+            // TextCritT
             // 
-            this.textBox1.Location = new System.Drawing.Point(106, 42);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.Size = new System.Drawing.Size(33, 20);
-            this.textBox1.TabIndex = 21;
-            this.textBox1.Text = "100";
+            this.TextCritT.Location = new System.Drawing.Point(106, 42);
+            this.TextCritT.Name = "TextCritT";
+            this.TextCritT.Size = new System.Drawing.Size(33, 20);
+            this.TextCritT.TabIndex = 21;
+            this.TextCritT.Text = "100";
+            // 
+            // TimerAnimate
+            // 
+            this.TimerAnimate.Interval = 10;
+            // 
+            // BtnStart
+            // 
+            this.BtnStart.Location = new System.Drawing.Point(752, 278);
+            this.BtnStart.Name = "BtnStart";
+            this.BtnStart.Size = new System.Drawing.Size(159, 41);
+            this.BtnStart.TabIndex = 22;
+            this.BtnStart.Text = "Запуск";
+            this.BtnStart.UseVisualStyleBackColor = true;
             // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(920, 656);
+            this.Controls.Add(this.BtnStart);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.LabelNegative);
             this.Controls.Add(this.LabelPositive);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
-            this.Controls.Add(this.cmbAmount);
-            this.Controls.Add(this.labelTotal);
+            this.Controls.Add(this.CmbAmount);
+            this.Controls.Add(this.LabelTotal);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label1);
@@ -277,8 +294,8 @@
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label labelTotal;
-        private System.Windows.Forms.ComboBox cmbAmount;
+        private System.Windows.Forms.Label LabelTotal;
+        private System.Windows.Forms.ComboBox CmbAmount;
         private System.Windows.Forms.RadioButton radioAllSpins;
         private System.Windows.Forms.RadioButton radioNegativeSpins;
         private System.Windows.Forms.RadioButton radioPositiveSpins;
@@ -290,7 +307,9 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.GroupBox groupBox2;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.TextBox TextCritT;
+        private System.Windows.Forms.Timer TimerAnimate;
+        private System.Windows.Forms.Button BtnStart;
     }
 }
 
