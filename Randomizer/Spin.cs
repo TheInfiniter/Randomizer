@@ -12,11 +12,11 @@ namespace Randomizer
         public double Y { get; set; }
         public int Sign { get; set; }
 
-        public Spin(double x, double y, int sign)
+        public Spin(double x, double y)
         {
             X = x;
             Y = y;
-            Sign = sign;
+            Sign = 0;
         }
     }
 }

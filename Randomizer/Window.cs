@@ -10,10 +10,8 @@ namespace Randomizer
         Graphics _draw;
         int _cellSize, _actualSize, _positiveSpins, _negativeSpins;
         int _quantity;
-        Spin[,] _spins;
-        bool drawing;
+        Spin[,] _spins, _newSpins;
         Random rand;
-        SpinType generate;
 
         public Window()
         {
@@ -22,7 +20,6 @@ namespace Randomizer
             _bmp = new Bitmap(pcbMain.Width, pcbMain.Height);
             _draw = Graphics.FromImage(_bmp);
             cmbAmount.SelectedIndex = 0;
-            drawing = true;
 
             rand = new Random();
         }
@@ -35,9 +32,14 @@ namespace Randomizer
             _cellSize = _actualSize + 2;
             _quantity = (int)Math.Pow(_actualSize, 2);
 
+            _positiveSpins = 0;
+            _negativeSpins = 0;
+
             labelTotal.Text = _quantity.ToString();
 
-            if(radioAllSpins.Checked)
+            SpinType generate = SpinType.All;
+
+            if (radioAllSpins.Checked)
             {
                 generate = SpinType.All;
             }
@@ -74,7 +76,6 @@ namespace Randomizer
             }
             LabelNegative.Text = negativeSpins.ToString();
             LabelPositive.Text = positiveSpins.ToString();
-            
         }
 
         private void DrawGrid(int size)
@@ -119,7 +120,7 @@ namespace Randomizer
             {
                 for (int j = 0; j < size; j++)
                 {
-                    if (spins[i,j].Sign == 1)
+                    if (spins[i, j].Sign == 1)
                     {
                         _draw.FillEllipse(brushRed, (float)(spins[i, j].X - radius), (float)(spins[i, j].Y - radius), (float)radius * 2, (float)radius * 2);
                     }
@@ -127,7 +128,7 @@ namespace Randomizer
                     {
                         _draw.FillEllipse(brushNavy, (float)(spins[i, j].X - radius), (float)(spins[i, j].Y - radius), (float)radius * 2, (float)radius * 2);
                     }
-                    else
+                    else if (spins[i, j].Sign == 0)
                     {
                         _draw.FillEllipse(brushGold, (float)(spins[i, j].X - radius), (float)(spins[i, j].Y - radius), (float)radius * 2, (float)radius * 2);
                     }
@@ -139,106 +140,101 @@ namespace Randomizer
         {
             Spin[,] spins = new Spin[size, size];
 
-            //size += 2;
-
             double width = pcbMain.Width;
             double height = pcbMain.Height;
             double widthStep = width / (size - 1);
             double heightStep = height / (size - 1);
 
             double x = 0, y = 0;
-            int sign;
 
+            // размещение спинов на сетке
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
-                {
-                    if ((j == 0 | j == (size - 1)) | (i == 0 | i == (size - 1)))
-                    {
-                        sign = 0;
-                    }
-                    else
-                    {
-                        sign = GetRandomInt(ref _positiveSpins, ref _negativeSpins, type);
-                    }
-                    spins[i, j] = new Spin(x, y, sign);
+                {   
+                    spins[i, j] = new Spin(x, y);
+
                     x += widthStep;
                 }
                 y += heightStep;
                 x = 0;
             }
 
+            spins = GetRandomSign(spins, size, type);
+
             return spins;
         }
 
-        private int GetRandomInt(ref int positive, ref int negative, SpinType type)
+        private Spin[,] GetRandomSign(Spin[,] spins, int size, SpinType type)
         {
-            int res = 0;
+            int row, column;
 
             switch(type)
             {
+                case SpinType.All:
+                    {
+                        for (int i = 0; i < _quantity / 2; i++)
+                        {
+                            while (true)
+                            {
+                                row = rand.Next(1, size - 1);
+                                column = rand.Next(1, size - 1);
+
+                                if (spins[row, column].Sign == 0)
+                                {
+                                    spins[row, column].Sign = 1;
+                                    break;
+                                }
+                            }
+                        }
+
+                        for (int i = 0; i < _quantity / 2; i++)
+                        {
+                            while (true)
+                            {
+                                row = rand.Next(1, size - 1);
+                                column = rand.Next(1, size - 1);
+
+                                if (spins[row, column].Sign == 0)
+                                {
+                                    spins[row, column].Sign = -1;
+                                    break;
+                                }
+                            }
+                        }
+                        break;
+                    }
                 case SpinType.Positive:
                     {
-                        return 1;
+                        for (int i = 1; i < size - 1; i++)
+                        {
+                            for (int j = 1; j < size - 1; j++)
+                            {
+                                spins[i, j].Sign = 1;
+                            }
+                        }
+                        break;
                     }
                 case SpinType.Negative:
                     {
-                        return -1;
-                    }
-                case SpinType.All:
-                    {
-                        do
+                        for (int i = 1; i < size - 1; i++)
                         {
-                            res = rand.Next(-1, 2);
-
-                            if (res == 1 & positive <= (_quantity / 2))
+                            for (int j = 1; j < size - 1; j++)
                             {
-                                positive += 1;
-                                break;
+                                spins[i, j].Sign = -1;
                             }
-                            if (res == -1 & negative <= (_quantity / 2))
-                            {
-                                negative += 1;
-                                break;
-                            }
-                        } while (res == 0);
-                        
+                        }
                         break;
                     }
             }
-            /*
-            while(res == 0)
-            {
-                res = rand.Next(-1, 2);
-            }
-            */
-            return res;
-        }
 
-        private void BtnTestRotate_Click(object sender, EventArgs e)
-        {
-            _spins = RotateSpin(_spins);
-
-            DrawGrid(_cellSize);
-            DrawSpins(_spins, _cellSize);
-
-            pcbMain.Image = _bmp;
-        }
-
-        private void radioAllSpins_CheckedChanged(object sender, EventArgs e)
-        {
-            
+            return spins;
         }
 
         private Spin[,] RotateSpin(Spin[,] spins)
         {
             int row = rand.Next(0, spins.GetLength(0));
             int column = rand.Next(0, spins.GetLength(1));
-
-            /*
-            LabelRow.Text = row.ToString();
-            LabelColumn.Text = column.ToString();
-            */
 
             spins[row, column].Sign = -spins[row, column].Sign;
 
