@@ -9,6 +9,9 @@ namespace Randomizer
         Bitmap _bmp;
         Graphics _draw;
 
+        readonly double _k = 1.38 * Math.Pow(10, -23);
+        double _temperature;
+
         /// <summary>
         /// Сторона ячейки (actualSize + 2)
         /// </summary>
@@ -19,6 +22,8 @@ namespace Randomizer
         /// </summary>
         int _actualSize;
         int _positiveSpins, _negativeSpins;
+
+        int _interval, montecarlo;
 
         /// <summary>
         /// Общее количество используемых спинов
@@ -43,21 +48,27 @@ namespace Randomizer
             _bmp = new Bitmap(pcbMain.Width, pcbMain.Height);
             _draw = Graphics.FromImage(_bmp);
             _draw.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+
             CmbAmount.SelectedIndex = 0;
+            CmbMultiplierT.SelectedIndex = 0;
 
             rand = new Random();
+
+            _interval = Convert.ToInt32(TxtInterval.Text);
         }
 
         private void btnCreate_Click(object sender, EventArgs e)
         {
             _draw.Clear(Color.Wheat);
 
+            if (TimerAnimate.Enabled)
+            {
+                TimerAnimate.Enabled = false;
+            }
+
             _actualSize = Convert.ToInt32(CmbAmount.SelectedItem);
             _cellSize = _actualSize + 2;
             _quantity = (int)Math.Pow(_actualSize, 2);
-
-            _positiveSpins = 0;
-            _negativeSpins = 0;
 
             LabelTotal.Text = _quantity.ToString();
 
@@ -76,41 +87,129 @@ namespace Randomizer
                 generate = SpinType.Negative;
             }
 
-            _spins = InitSpins(_cellSize, generate);
-            DrawGrid(_cellSize);
-            DrawSpins(_spins, _cellSize);
+            _spins = InitSpins(_actualSize, generate);
+
+            DrawAll(pcbMain, _spins, _actualSize);
+            /*
+            DrawSpins(_spins, _actualSize);
+            DrawGrid(_actualSize);
+            */
 
             pcbMain.Image = _bmp;
             
-            /*
-            int positiveSpins = 0;
-            int negativeSpins = 0;
+            _positiveSpins = 0;
+            _negativeSpins = 0;
             for (int i = 0; i < _spins.GetLength(0); i++)
             {
                 for (int j = 0; j < _spins.GetLength(1); j++)
                 {
                     if (_spins[i, j].Sign == 1)
                     {
-                        positiveSpins += 1;
+                        _positiveSpins += 1;
                     }
                     if (_spins[i, j].Sign == -1)
                     {
-                        negativeSpins += 1;
+                        _negativeSpins += 1;
                     }
                 }
             }
-            LabelNegative.Text = negativeSpins.ToString();
-            LabelPositive.Text = positiveSpins.ToString();
-            */
+            LabelPositive.Text = _positiveSpins.ToString();
+            LabelNegative.Text = _negativeSpins.ToString();
+
+            montecarlo = 0;
+            LabelMonteCarlo.Text = montecarlo.ToString();
+            BtnStart.Enabled = true;
+        }
+
+        private void BtnStart_Click(object sender, EventArgs e)
+        {
+            _temperature = Convert.ToDouble(TxtCritT.Text) * Convert.ToDouble(CmbMultiplierT.SelectedItem);
+
+            if (!TimerAnimate.Enabled)
+            {
+                TimerAnimate.Interval = _interval = Convert.ToInt32(TxtInterval.Text);
+                TimerAnimate.Enabled = true;
+                BtnStart.Text = "Стоп";
+            }
+            else
+            {
+                TimerAnimate.Enabled = false;
+                BtnStart.Text = "Запуск";
+            }
+        }
+
+        private void TimerAnimate_Tick(object sender, EventArgs e)
+        {
+            int row = rand.Next(0, _actualSize);
+            int column = rand.Next(0, _actualSize);
+            _spins[row, column].Sign = -_spins[row, column].Sign;
+
+            if (-_spins[row, column].Sign == -1)
+            {
+                --_positiveSpins;
+                ++_negativeSpins;
+            }
+            else
+            {
+                ++_positiveSpins;
+                --_negativeSpins;
+            }
+
+            if (++montecarlo == _quantity)
+            {
+                TimerAnimate.Enabled = false;
+            }
+
+            LabelPositive.Text = _positiveSpins.ToString();
+            LabelNegative.Text = _negativeSpins.ToString();
+            LabelMonteCarlo.Text = montecarlo.ToString();
+
+            DrawAll(pcbMain, _spins, _actualSize);
+        }
+
+        private void Metropolis()
+        {
+            int row = rand.Next(0, _actualSize);
+            int column = rand.Next(0, _actualSize);
+
+            // энергия исходного состояния спина
+            int prevSum = _spins[(row - 1 + _actualSize) % _actualSize, column].Sign +
+                _spins[(row + 1 + _actualSize) % _actualSize, column].Sign +
+                _spins[row, (column - 1 + _actualSize) % _actualSize].Sign +
+                _spins[row, (column + 1 + _actualSize) % _actualSize].Sign;
+
+            _newSpins = RotateSpin(_spins, row, column); // переворот спина
+
+            // энергия нового состояния спина
+            int newSum = _spins[(row - 1 + _actualSize) % _actualSize, column].Sign +
+                _spins[(row + 1 + _actualSize) % _actualSize, column].Sign +
+                _spins[row, (column - 1 + _actualSize) % _actualSize].Sign +
+                _spins[row, (column + 1 + _actualSize) % _actualSize].Sign;
+
+            int diff = newSum - prevSum;
+            double R = GetRandom(0, 1.1);
+
+            if (diff <= 0 | R < Math.Exp(-diff / (_k * _temperature)))
+            {
+                _newSpins.CopyTo(_spins, 0);
+            }
+        }
+
+        private void DrawAll(PictureBox pcb, Spin[,] spins, int size)
+        {
+            DrawSpins(spins, size);
+            DrawGrid(size);
+
+            pcb.Image = _bmp;
         }
 
         private void DrawGrid(int size)
         {
             Pen pen = new Pen(Color.Black, 1);
-            size -= 1;
+            
             double width = pcbMain.Width, height = pcbMain.Height;
-            double widthStep = width / size;
-            double heightStep = height / size;
+            double widthStep = width / (size);
+            double heightStep = height / (size);
 
             for (int i = 1; i < width - 1; i++)
             {
@@ -140,23 +239,21 @@ namespace Randomizer
             double widthStep = width / (size);
             double heightStep = height / (size);
 
-            double radius = widthStep * 0.25;
-
             for (int i = 0; i < size; i++)
             {
                 for (int j = 0; j < size; j++)
                 {
                     if (spins[i, j].Sign == 1)
                     {
-                        _draw.FillEllipse(brushRed, (float)(spins[i, j].X - radius), (float)(spins[i, j].Y - radius), (float)radius * 2, (float)radius * 2);
+                        _draw.FillRectangle(brushRed, (float)(spins[i, j].X - widthStep / 2), (float)(spins[i, j].Y - heightStep / 2), (float)widthStep, (float)heightStep);
                     }
                     else if (spins[i, j].Sign == -1)
                     {
-                        _draw.FillEllipse(brushNavy, (float)(spins[i, j].X - radius), (float)(spins[i, j].Y - radius), (float)radius * 2, (float)radius * 2);
+                        _draw.FillRectangle(brushNavy, (float)(spins[i, j].X - widthStep / 2), (float)(spins[i, j].Y - heightStep / 2), 2 * (float)widthStep, (float)heightStep);
                     }
                     else if (spins[i, j].Sign == 0)
                     {
-                        _draw.FillEllipse(brushGold, (float)(spins[i, j].X - radius), (float)(spins[i, j].Y - radius), (float)radius * 2, (float)radius * 2);
+                        _draw.FillRectangle(brushGold, (float)(spins[i, j].X - widthStep / 2), (float)(spins[i, j].Y - heightStep / 2), (float)widthStep, (float)heightStep);
                     }
                 }
             }
@@ -168,10 +265,10 @@ namespace Randomizer
 
             double width = pcbMain.Width;
             double height = pcbMain.Height;
-            double widthStep = width / (size - 1);
-            double heightStep = height / (size - 1);
+            double widthStep = width / (size);
+            double heightStep = height / (size);
 
-            double x = 0, y = 0;
+            double x = widthStep / 2, y = heightStep / 2;
 
             // размещение спинов на сетке
             for (int i = 0; i < size; i++)
@@ -183,7 +280,7 @@ namespace Randomizer
                     x += widthStep;
                 }
                 y += heightStep;
-                x = 0;
+                x = widthStep / 2;
             }
 
             spins = GetRandomSign(spins, size, type);
@@ -194,7 +291,7 @@ namespace Randomizer
         private Spin[,] GetRandomSign(Spin[,] spins, int size, SpinType type)
         {
             int row, column;
-            int tmp = (int)Math.Pow(_cellSize, 2);
+            int tmp = (int)Math.Pow(size, 2);
 
             switch(type)
             {
@@ -265,32 +362,6 @@ namespace Randomizer
             return spins;
         }
 
-        private void Metropolis()
-        {
-            int row = rand.Next(1, _cellSize - 1);
-            int column = rand.Next(1, _cellSize - 1);
-
-            // энергия исходного состояния спина
-            int prevSum = _spins[(row - 1 + _cellSize) % _cellSize, column].Sign +
-                _spins[(row + 1 + _cellSize) % _cellSize, column].Sign +
-                _spins[row, (column - 1 + _cellSize) % _cellSize].Sign +
-                _spins[row, (column + 1 + _cellSize) % _cellSize].Sign;
-
-            _newSpins = RotateSpin(_spins, row, column); // переворот спина
-
-            // энергия нового состояния спина
-            int newSum = _newSpins[(row - 1 + _cellSize) % _cellSize, column].Sign +
-                _newSpins[(row + 1 + _cellSize) % _cellSize, column].Sign +
-                _newSpins[row, (column - 1 + _cellSize) % _cellSize].Sign +
-                _newSpins[row, (column + 1 + _cellSize) % _cellSize].Sign;
-
-            int diff = newSum - prevSum;
-            if (diff <= 0)
-            {
-                // доделать изменение состояния
-            }
-        }
-
         private int GetEdge(int index, int length)
         {
             if (index == 0)
@@ -303,6 +374,19 @@ namespace Randomizer
             }
 
             return index;
+        }
+
+        /// <summary>
+        /// Получить случайное число в диапазоне.
+        /// </summary>
+        /// <param name="minimum">Левая граница диапазона.</param>
+        /// <param name="maximum">Правая граница диапазона.</param>
+        /// <returns>Случайное число из диапазона.</returns>
+        public double GetRandom(double minimum, double maximum)
+        {
+            double res = rand.NextDouble() * (maximum - minimum) + minimum;
+            if (res > 1) res = 1;
+            return res;
         }
     }
 }
