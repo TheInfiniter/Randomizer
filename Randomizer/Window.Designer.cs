@@ -96,7 +96,7 @@
             // 
             // label1
             // 
-            this.label1.Location = new System.Drawing.Point(221, 21);
+            this.label1.Location = new System.Drawing.Point(217, 22);
             this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(148, 25);
@@ -150,10 +150,10 @@
             // 
             // label8
             // 
-            this.label8.Location = new System.Drawing.Point(221, 79);
+            this.label8.Location = new System.Drawing.Point(221, 78);
             this.label8.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(148, 25);
+            this.label8.Size = new System.Drawing.Size(148, 22);
             this.label8.TabIndex = 26;
             this.label8.Text = "Вычислений в с";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -171,7 +171,7 @@
             // 
             // TxtInterval
             // 
-            this.TxtInterval.Location = new System.Drawing.Point(377, 79);
+            this.TxtInterval.Location = new System.Drawing.Point(373, 78);
             this.TxtInterval.Margin = new System.Windows.Forms.Padding(4);
             this.TxtInterval.Name = "TxtInterval";
             this.TxtInterval.Size = new System.Drawing.Size(59, 22);
@@ -183,17 +183,17 @@
             this.label4.Location = new System.Drawing.Point(221, 50);
             this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(148, 25);
+            this.label4.Size = new System.Drawing.Size(148, 21);
             this.label4.TabIndex = 9;
             this.label4.Text = "Количество частиц";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LabelTotal
             // 
-            this.LabelTotal.Location = new System.Drawing.Point(377, 50);
+            this.LabelTotal.Location = new System.Drawing.Point(373, 50);
             this.LabelTotal.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelTotal.Name = "LabelTotal";
-            this.LabelTotal.Size = new System.Drawing.Size(59, 25);
+            this.LabelTotal.Size = new System.Drawing.Size(59, 21);
             this.LabelTotal.TabIndex = 10;
             this.LabelTotal.Text = "0";
             this.LabelTotal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -208,7 +208,7 @@
             "100",
             "200",
             "500"});
-            this.CmbAmount.Location = new System.Drawing.Point(377, 22);
+            this.CmbAmount.Location = new System.Drawing.Point(373, 22);
             this.CmbAmount.Margin = new System.Windows.Forms.Padding(4);
             this.CmbAmount.Name = "CmbAmount";
             this.CmbAmount.Size = new System.Drawing.Size(59, 24);
@@ -408,17 +408,17 @@
             this.label10.Location = new System.Drawing.Point(7, 66);
             this.label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label10.Name = "label10";
-            this.label10.Size = new System.Drawing.Size(141, 25);
+            this.label10.Size = new System.Drawing.Size(126, 25);
             this.label10.TabIndex = 20;
-            this.label10.Text = "че тут нужно будет";
+            this.label10.Text = "еще что-то";
             this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label11
             // 
-            this.label11.Location = new System.Drawing.Point(157, 66);
+            this.label11.Location = new System.Drawing.Point(141, 66);
             this.label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(45, 25);
+            this.label11.Size = new System.Drawing.Size(61, 25);
             this.label11.TabIndex = 19;
             this.label11.Text = "0";
             this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -428,7 +428,7 @@
             this.label12.Location = new System.Drawing.Point(7, 18);
             this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(141, 25);
+            this.label12.Size = new System.Drawing.Size(126, 25);
             this.label12.TabIndex = 15;
             this.label12.Text = "Средняя Е";
             this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -438,27 +438,27 @@
             this.label13.Location = new System.Drawing.Point(7, 42);
             this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(141, 25);
+            this.label13.Size = new System.Drawing.Size(126, 25);
             this.label13.TabIndex = 16;
             this.label13.Text = "Средняя М";
             this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // LabelENorm
             // 
-            this.LabelENorm.Location = new System.Drawing.Point(157, 17);
+            this.LabelENorm.Location = new System.Drawing.Point(141, 17);
             this.LabelENorm.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.LabelENorm.Name = "LabelENorm";
-            this.LabelENorm.Size = new System.Drawing.Size(45, 25);
+            this.LabelENorm.Size = new System.Drawing.Size(61, 25);
             this.LabelENorm.TabIndex = 17;
             this.LabelENorm.Text = "0";
             this.LabelENorm.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // labelMNorm
             // 
-            this.labelMNorm.Location = new System.Drawing.Point(157, 42);
+            this.labelMNorm.Location = new System.Drawing.Point(141, 42);
             this.labelMNorm.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.labelMNorm.Name = "labelMNorm";
-            this.labelMNorm.Size = new System.Drawing.Size(45, 25);
+            this.labelMNorm.Size = new System.Drawing.Size(61, 25);
             this.labelMNorm.TabIndex = 18;
             this.labelMNorm.Text = "0";
             this.labelMNorm.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

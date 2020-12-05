@@ -69,12 +69,12 @@ namespace Randomizer
         /// <summary>
         /// Средняя намагниченность.
         /// </summary>
-        double normalM;
+        double _normalM;
 
         /// <summary>
         /// Средняя энергия.
         /// </summary>
-        double normalE;
+        double _normalE;
 
         Random rand;
 
@@ -144,6 +144,14 @@ namespace Randomizer
             // считаем, сколько каких спинов получилось
             GetSpinsQuantity(_spins);
 
+            // средняя намагниченность
+            _normalM = GetNormalM(_spins);
+            labelMNorm.Text = _normalM.ToString();
+
+            // средняя энергия
+            _normalE = GetNormalE(_spins, _cellSize);
+            LabelENorm.Text = _normalE.ToString();
+
             // немного красоты на окошке
             BarSpins.Value = _positiveSpins;
             LabelPercent.Text = GetPercent(_positiveSpins, _quantity).ToString() + "%";
@@ -190,6 +198,10 @@ namespace Randomizer
             // и снова считаем спины
             GetSpinsQuantity(_spins);
 
+            //_normalM = GetNormalM(_spins);
+            labelMNorm.Text = _normalM.ToString();
+            LabelENorm.Text = _normalE.ToString();
+
             BarSpins.Value = _positiveSpins;
             LabelPercent.Text = GetPercent(_positiveSpins, _quantity).ToString() + "%";
 
@@ -224,10 +236,10 @@ namespace Randomizer
 
             if (((diff) < 0) || (rand.Next(100) < (100 * w)))
             {
-                _spins = newSpins;
+                _spins = newSpins; // принимаем новое состояние, если условия выполнены
+                _normalM += 2 * _spins[row, column].Sign;
+                _normalE -= 2 * _spins[row, column].Sign * prevH;
             }
-
-            //return newSpins;
         }
 
         /// <summary>
@@ -284,7 +296,7 @@ namespace Randomizer
         }
 
         /// <summary>
-        /// Текущий процент положительных спинов.
+        /// Получить текущий процент положительных спинов.
         /// </summary>
         /// <param name="positiveSpins">Число положительных спинов.</param>
         /// <param name="quantity">Число всех спинов.</param>
@@ -292,6 +304,39 @@ namespace Randomizer
         private double GetPercent(double positiveSpins, double quantity)
         {
             return positiveSpins / quantity * 100;
+        }
+
+        private double GetNormalM(Spin[,] spins)
+        {
+            int outerEdge = 1;
+            double res = 0;
+
+            for (int i = outerEdge; i < spins.GetLength(0) - outerEdge; i++)
+            {
+                for (int j = outerEdge; j < spins.GetLength(1) - outerEdge; j++)
+                {
+                    res += spins[i, j].Sign;
+                }
+            }
+
+            return res;
+        }
+
+        private double GetNormalE(Spin[,] spins, int size)
+        {
+            int outerEdge = 1;
+            double res = 0;
+
+            for (int i = outerEdge; i < size - outerEdge; i++)
+            {
+                for (int j = outerEdge; j < size - outerEdge; j++)
+                {
+                    res += (i + 1 != size - outerEdge) ? spins[i, j].Sign * spins[i + 1, j].Sign : 0;
+                    res += (j + 1 != size - outerEdge) ? spins[i, j].Sign * spins[i + 1, j].Sign : 0;
+                }
+            }
+            
+            return res;
         }
 
         /// <summary>
