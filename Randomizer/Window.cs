@@ -143,6 +143,8 @@ namespace Randomizer
 
         private void TimerAnimate_Tick(object sender, EventArgs e)
         {
+            _interval = Convert.ToInt32(TxtInterval.Text);
+
             for (int i = 0; i < _interval; i++)
             {
                 Metropolis();
@@ -179,46 +181,27 @@ namespace Randomizer
 
         private void Metropolis()
         {
-            int row = rand.Next(0, _actualSize);
-            int column = rand.Next(0, _actualSize);
+            int row = rand.Next(_actualSize);
+            int column = rand.Next(_actualSize);
 
+            _temperature = Convert.ToDouble(TxtCritT.Text) * Convert.ToDouble(CmbMultiplierT.SelectedItem);
+            coefJ = Convert.ToDouble(TxtCoefJ.Text);
+            
             double prevH = Energy(_spins, row, column, coefJ, _actualSize);
 
             Spin[,] newSpins = (Spin[,])_spins.Clone();
             newSpins[row, column].Sign = -newSpins[row, column].Sign;
-
             double nextH = Energy(newSpins, row, column, coefJ, _actualSize);
+
             double diff = nextH - prevH;
             double w = Math.Exp(-diff / _temperature);
 
-            if (((diff) < 0) || (rand.Next(100) > (100 * w)))
+            if (((diff) < 0) || (rand.Next(100) < (100 * w)))
             {
                 _spins = newSpins;
             }
-            /*
-            // энергия исходного состояния спина
-            int prevSum = _spins[(row - 1 + _actualSize) % _actualSize, column].Sign +
-                _spins[(row + 1 + _actualSize) % _actualSize, column].Sign +
-                _spins[row, (column - 1 + _actualSize) % _actualSize].Sign +
-                _spins[row, (column + 1 + _actualSize) % _actualSize].Sign;
 
-            _newSpins = RotateSpin(_spins, row, column); // переворот спина
-
-            // энергия нового состояния спина
-            int newSum = _spins[(row - 1 + _actualSize) % _actualSize, column].Sign +
-                _spins[(row + 1 + _actualSize) % _actualSize, column].Sign +
-                _spins[row, (column - 1 + _actualSize) % _actualSize].Sign +
-                _spins[row, (column + 1 + _actualSize) % _actualSize].Sign;
-
-            
-            int diff = newSum - prevSum;
-            double R = GetRandom(0, 1.1);
-
-            if (diff <= 0 | R < Math.Exp(-diff / (_k * _temperature)))
-            {
-                _newSpins.CopyTo(_spins, 0);
-            }
-            */
+            //return newSpins;
         }
 
         private double Energy(Spin[,] spins, int row, int column, double J, int gridSize)
