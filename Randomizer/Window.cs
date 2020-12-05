@@ -10,6 +10,10 @@ namespace Randomizer
         Graphics _draw;
 
         readonly double _k = 1.38 * Math.Pow(10, -23);
+
+        /// <summary>
+        /// Температура системы (критическая * множитель).
+        /// </summary>
         double _temperature;
 
         /// <summary>
@@ -18,14 +22,39 @@ namespace Randomizer
         int _cellSize;
 
         /// <summary>
+        /// Общий размер ячейки.
+        /// </summary>
+        int _grid;
+
+        /// <summary>
         /// Количество спинов в одном измерении
         /// </summary>
         int _actualSize;
-        int _positiveSpins, _negativeSpins;
 
-        int _interval, montecarlo;
+        /// <summary>
+        /// Положительные спины.
+        /// </summary>
+        int _positiveSpins;
 
-        double coefJ;
+        /// <summary>
+        /// Отрицательные спины.
+        /// </summary>
+        int _negativeSpins;
+
+        /// <summary>
+        /// Количество шагов Метрополиса за тик таймера (который по умолчанию равен 0.1 секунды).
+        /// </summary>
+        int _interval;
+
+        /// <summary>
+        /// Текущий тик таймера (хотя по задумке это текущий МКШ).
+        /// </summary>
+        int _montecarlo;
+
+        /// <summary>
+        /// Коэффициент J (для ферромагнетиков > 0, для антиферромагнетиков < 0).
+        /// </summary>
+        double _coefJ;
 
         /// <summary>
         /// Общее количество используемых спинов
@@ -38,9 +67,15 @@ namespace Randomizer
         Spin[,] _spins;
 
         /// <summary>
-        /// Новое состояние спинов
+        /// Средняя намагниченность.
         /// </summary>
-        Spin[,] _newSpins;
+        double normalM;
+
+        /// <summary>
+        /// Средняя энергия.
+        /// </summary>
+        double normalE;
+
         Random rand;
 
         public Window()
@@ -59,21 +94,32 @@ namespace Randomizer
             _interval = Convert.ToInt32(TxtInterval.Text);
         }
 
+        private void Window_Load(object sender, EventArgs e)
+        {
+            btnCreate_Click(sender, e);
+        }
+
         private void btnCreate_Click(object sender, EventArgs e)
         {
+            // красивый цвет фона
             _draw.Clear(Color.Wheat);
 
-            if (TimerAnimate.Enabled)
-            {
-                TimerAnimate.Enabled = false;
-            }
+            // тормозим таймер на всякий случай
+            TimerAnimate.Stop();
+            BtnStart.Text = "Запуск";
 
+            // задаем переменные
             _actualSize = Convert.ToInt32(CmbAmount.SelectedItem);
-            _cellSize = _actualSize + 2;
             _quantity = (int)Math.Pow(_actualSize, 2);
+
+            _cellSize = _actualSize + 2;
+            _grid = (int)Math.Pow(_cellSize, 2);
+
+            BarSpins.Maximum = _quantity;
 
             LabelTotal.Text = _quantity.ToString();
 
+            // выбираем тип генерации
             SpinType generate = SpinType.All;
 
             if (radioAllSpins.Checked)
@@ -89,44 +135,29 @@ namespace Randomizer
                 generate = SpinType.Negative;
             }
 
-            _spins = InitSpins(_actualSize, generate);
+            // задаем начальное положение спинов
+            _spins = InitSpins(_cellSize, generate);
 
-            DrawAll(pcbMain, _spins, _actualSize);
-            /*
-            DrawSpins(_spins, _actualSize);
-            DrawGrid(_actualSize);
-            */
+            // универсальный метод для отрисовки текущего состояния системы
+            DrawState(pcbMain, _spins, _cellSize);
 
-            pcbMain.Image = _bmp;
-            
-            _positiveSpins = 0;
-            _negativeSpins = 0;
-            for (int i = 0; i < _spins.GetLength(0); i++)
-            {
-                for (int j = 0; j < _spins.GetLength(1); j++)
-                {
-                    if (_spins[i, j].Sign == 1)
-                    {
-                        _positiveSpins += 1;
-                    }
-                    if (_spins[i, j].Sign == -1)
-                    {
-                        _negativeSpins += 1;
-                    }
-                }
-            }
-            LabelPositive.Text = _positiveSpins.ToString();
-            LabelNegative.Text = _negativeSpins.ToString();
+            // считаем, сколько каких спинов получилось
+            GetSpinsQuantity(_spins);
 
-            montecarlo = 0;
-            LabelMonteCarlo.Text = montecarlo.ToString();
+            // немного красоты на окошке
+            BarSpins.Value = _positiveSpins;
+            LabelPercent.Text = GetPercent(_positiveSpins, _quantity).ToString() + "%";
+
+            // и готовим плацдарм для метрополиса
+            _montecarlo = 0;
+            LabelMonteCarlo.Text = _montecarlo.ToString();
             BtnStart.Enabled = true;
         }
 
         private void BtnStart_Click(object sender, EventArgs e)
         {
             _temperature = Convert.ToDouble(TxtCritT.Text) * Convert.ToDouble(CmbMultiplierT.SelectedItem);
-            coefJ = Convert.ToDouble(TxtCoefJ.Text);
+            _coefJ = Convert.ToDouble(TxtCoefJ.Text);
             _interval = Convert.ToInt32(TxtInterval.Text);
 
             if (!TimerAnimate.Enabled)
@@ -145,53 +176,48 @@ namespace Randomizer
         {
             _interval = Convert.ToInt32(TxtInterval.Text);
 
+            // выполняем сразу кучу шагов Метрополиса (иначе слишком медленно)
             for (int i = 0; i < _interval; i++)
             {
                 Metropolis();
             }
 
-            if (++montecarlo == _quantity)
+            if (++_montecarlo == _quantity)
             {
                 //TimerAnimate.Enabled = false;
             }
 
-            _positiveSpins = 0;
-            _negativeSpins = 0;
-            for (int i = 0; i < _spins.GetLength(0); i++)
-            {
-                for (int j = 0; j < _spins.GetLength(1); j++)
-                {
-                    if (_spins[i, j].Sign == 1)
-                    {
-                        _positiveSpins += 1;
-                    }
-                    if (_spins[i, j].Sign == -1)
-                    {
-                        _negativeSpins += 1;
-                    }
-                }
-            }
-            LabelPositive.Text = _positiveSpins.ToString();
-            LabelNegative.Text = _negativeSpins.ToString();
+            // и снова считаем спины
+            GetSpinsQuantity(_spins);
 
-            LabelMonteCarlo.Text = montecarlo.ToString();
+            BarSpins.Value = _positiveSpins;
+            LabelPercent.Text = GetPercent(_positiveSpins, _quantity).ToString() + "%";
 
-            DrawAll(pcbMain, _spins, _actualSize);
+            LabelMonteCarlo.Text = _montecarlo.ToString();
+
+            // рисуем обновленное состояние
+            DrawState(pcbMain, _spins, _cellSize);
         }
 
+        /// <summary>
+        /// Один шаг алгоритма Метрополиса.
+        /// </summary>
         private void Metropolis()
         {
-            int row = rand.Next(_actualSize);
-            int column = rand.Next(_actualSize);
+            // случайные координаты
+            int row = rand.Next(_cellSize);
+            int column = rand.Next(_cellSize);
 
             _temperature = Convert.ToDouble(TxtCritT.Text) * Convert.ToDouble(CmbMultiplierT.SelectedItem);
-            coefJ = Convert.ToDouble(TxtCoefJ.Text);
+            _coefJ = Convert.ToDouble(TxtCoefJ.Text);
             
-            double prevH = Energy(_spins, row, column, coefJ, _actualSize);
+            // энергия текущего состояния
+            double prevH = Energy(_spins, row, column, _coefJ, _cellSize);
 
+            // новое состояние, поворот спина, энергия нового состояния
             Spin[,] newSpins = (Spin[,])_spins.Clone();
             newSpins[row, column].Sign = -newSpins[row, column].Sign;
-            double nextH = Energy(newSpins, row, column, coefJ, _actualSize);
+            double nextH = Energy(newSpins, row, column, _coefJ, _cellSize);
 
             double diff = nextH - prevH;
             double w = Math.Exp(-diff / _temperature);
@@ -204,6 +230,15 @@ namespace Randomizer
             //return newSpins;
         }
 
+        /// <summary>
+        /// Энергия соседей спина.
+        /// </summary>
+        /// <param name="spins">Матрица спинов.</param>
+        /// <param name="row">Строка нужного спина.</param>
+        /// <param name="column">Столбец нужного спина.</param>
+        /// <param name="J">Коэффициент взаимодействия.</param>
+        /// <param name="gridSize">Размер матрицы спинов.</param>
+        /// <returns>Значение энергии взаимодействия выбранного спина с соседями.</returns>
         private double Energy(Spin[,] spins, int row, int column, double J, int gridSize)
         {
             Point left = new Point
@@ -246,20 +281,56 @@ namespace Randomizer
                 spins[row, column].Sign * spins[right.X, right.Y].Sign +
                 spins[row, column].Sign * spins[up.X, up.Y].Sign +
                 spins[row, column].Sign * spins[down.X, down.Y].Sign);
-            /*
-            double middle = 
-                spins[(row - 1 + gridSize) % gridSize, column] +
-                spins[(row + 1 + gridSize) % gridSize, column] +
-                spins[row, (column - 1 + gridSize) % gridSize] +
-                spins[row, (column + 1 + gridSize) % gridSize];
-
-            double energy = -J * spins[row, column] * middle;
-
-            return energy;
-            */
         }
 
-        private void DrawAll(PictureBox pcb, Spin[,] spins, int size)
+        /// <summary>
+        /// Текущий процент положительных спинов.
+        /// </summary>
+        /// <param name="positiveSpins">Число положительных спинов.</param>
+        /// <param name="quantity">Число всех спинов.</param>
+        /// <returns>Процент положительных спинов относительно всех.</returns>
+        private double GetPercent(double positiveSpins, double quantity)
+        {
+            return positiveSpins / quantity * 100;
+        }
+
+        /// <summary>
+        /// Считает количество положительных и отрицательных спинов.
+        /// </summary>
+        /// <param name="spins">Матрица спинов.</param>
+        private void GetSpinsQuantity(Spin[,] spins)
+        {
+            _positiveSpins = 0;
+            _negativeSpins = 0;
+
+            // внешняя граница (захотим - отсечем один слой, захотим - два слоя, и так далее)
+            int outerEdge = 1;
+
+            for (int i = outerEdge; i < spins.GetLength(0) - outerEdge; i++)
+            {
+                for (int j = outerEdge; j < spins.GetLength(1) - outerEdge; j++)
+                {
+                    if (spins[i, j].Sign == 1)
+                    {
+                        _positiveSpins += 1;
+                    }
+                    if (spins[i, j].Sign == -1)
+                    {
+                        _negativeSpins += 1;
+                    }
+                }
+            }
+            LabelPositive.Text = _positiveSpins.ToString();
+            LabelNegative.Text = _negativeSpins.ToString();
+        }
+
+        /// <summary>
+        /// Нарисовать текущее состояние спинов.
+        /// </summary>
+        /// <param name="pcb">Контрол для рисования.</param>
+        /// <param name="spins">Матрица спинов.</param>
+        /// <param name="size">Размер ячейки.</param>
+        private void DrawState(PictureBox pcb, Spin[,] spins, int size)
         {
             DrawSpins(spins, size);
             DrawGrid(size);
@@ -323,6 +394,12 @@ namespace Randomizer
             }
         }
 
+        /// <summary>
+        /// Создать первичное расположение спинов.
+        /// </summary>
+        /// <param name="size">Размер ячейки со спинами.</param>
+        /// <param name="type">Тип генерации (см перечисление).</param>
+        /// <returns>Первичное расположение спинов.</returns>
         private Spin[,] InitSpins(int size, SpinType type)
         {
             Spin[,] spins = new Spin[size, size];
@@ -417,40 +494,6 @@ namespace Randomizer
             }
 
             return spins;
-        }
-
-        private Spin[,] RotateSpin(Spin[,] spins, int row, int column)
-        {
-            spins[row, column].Sign = -spins[row, column].Sign;
-
-            return spins;
-        }
-
-        private int GetEdge(int index, int length)
-        {
-            if (index == 0)
-            {
-                index = length - 2;
-            }
-            else if (index == length - 1)
-            {
-                index = 1;
-            }
-
-            return index;
-        }
-
-        /// <summary>
-        /// Получить случайное число в диапазоне.
-        /// </summary>
-        /// <param name="minimum">Левая граница диапазона.</param>
-        /// <param name="maximum">Правая граница диапазона.</param>
-        /// <returns>Случайное число из диапазона.</returns>
-        public double GetRandom(double minimum, double maximum)
-        {
-            double res = rand.NextDouble() * (maximum - minimum) + minimum;
-            if (res > 1) res = 1;
-            return res;
         }
     }
 }
