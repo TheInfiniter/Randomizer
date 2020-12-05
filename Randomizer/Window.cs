@@ -25,6 +25,8 @@ namespace Randomizer
 
         int _interval, montecarlo;
 
+        double coefJ;
+
         /// <summary>
         /// Общее количество используемых спинов
         /// </summary>
@@ -49,7 +51,7 @@ namespace Randomizer
             _draw = Graphics.FromImage(_bmp);
             _draw.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
-            CmbAmount.SelectedIndex = 0;
+            CmbAmount.SelectedIndex = 1;
             CmbMultiplierT.SelectedIndex = 0;
 
             rand = new Random();
@@ -124,10 +126,11 @@ namespace Randomizer
         private void BtnStart_Click(object sender, EventArgs e)
         {
             _temperature = Convert.ToDouble(TxtCritT.Text) * Convert.ToDouble(CmbMultiplierT.SelectedItem);
+            coefJ = Convert.ToDouble(TxtCoefJ.Text);
+            _interval = Convert.ToInt32(TxtInterval.Text);
 
             if (!TimerAnimate.Enabled)
             {
-                TimerAnimate.Interval = _interval = Convert.ToInt32(TxtInterval.Text);
                 TimerAnimate.Enabled = true;
                 BtnStart.Text = "Стоп";
             }
@@ -140,18 +143,35 @@ namespace Randomizer
 
         private void TimerAnimate_Tick(object sender, EventArgs e)
         {
-            //int row = rand.Next(0, _actualSize);
-            //int column = rand.Next(0, _actualSize);
-            //_spins[row, column].Sign = -_spins[row, column].Sign;
-            Metropolis();
+            for (int i = 0; i < _interval; i++)
+            {
+                Metropolis();
+            }
 
             if (++montecarlo == _quantity)
             {
-                TimerAnimate.Enabled = false;
+                //TimerAnimate.Enabled = false;
             }
 
+            _positiveSpins = 0;
+            _negativeSpins = 0;
+            for (int i = 0; i < _spins.GetLength(0); i++)
+            {
+                for (int j = 0; j < _spins.GetLength(1); j++)
+                {
+                    if (_spins[i, j].Sign == 1)
+                    {
+                        _positiveSpins += 1;
+                    }
+                    if (_spins[i, j].Sign == -1)
+                    {
+                        _negativeSpins += 1;
+                    }
+                }
+            }
             LabelPositive.Text = _positiveSpins.ToString();
             LabelNegative.Text = _negativeSpins.ToString();
+
             LabelMonteCarlo.Text = montecarlo.ToString();
 
             DrawAll(pcbMain, _spins, _actualSize);
@@ -162,15 +182,18 @@ namespace Randomizer
             int row = rand.Next(0, _actualSize);
             int column = rand.Next(0, _actualSize);
 
-            int prevSum = 
-                _spins[(row - 1 + _actualSize) % _actualSize, column].Sign +
-                _spins[(row + 1 + _actualSize) % _actualSize, column].Sign +
-                _spins[row, (column - 1 + _actualSize) % _actualSize].Sign +
-                _spins[row, (column + 1 + _actualSize) % _actualSize].Sign;
+            double prevH = Energy(_spins, row, column, coefJ, _actualSize);
 
-            if(prevSum * _spins[row, column].Sign <= 0)
+            Spin[,] newSpins = (Spin[,])_spins.Clone();
+            newSpins[row, column].Sign = -newSpins[row, column].Sign;
+
+            double nextH = Energy(newSpins, row, column, coefJ, _actualSize);
+            double diff = nextH - prevH;
+            double w = Math.Exp(-diff / _temperature);
+
+            if (((diff) < 0) || (rand.Next(100) > (100 * w)))
             {
-                _spins[row, column].Sign = -_spins[row, column].Sign;
+                _spins = newSpins;
             }
             /*
             // энергия исходного состояния спина
@@ -195,6 +218,61 @@ namespace Randomizer
             {
                 _newSpins.CopyTo(_spins, 0);
             }
+            */
+        }
+
+        private double Energy(Spin[,] spins, int row, int column, double J, int gridSize)
+        {
+            Point left = new Point
+            {
+                Y = column
+            };
+            if (row == 0)
+                left.X = 1;
+            else
+                left.X = row - 1;
+
+            Point right = new Point
+            {
+                Y = column
+            };
+            if (row == gridSize - 1)
+                right.X = gridSize - 2;
+            else
+                right.X = row + 1;
+
+            Point up = new Point
+            {
+                X = row
+            };
+            if (column == 0)
+                up.Y = 1;
+            else
+                up.Y = column - 1;
+
+            Point down = new Point
+            {
+                X = row
+            };
+            if (column == gridSize - 1)
+                down.Y = gridSize - 2;
+            else
+                down.Y = column + 1;
+
+            return -J * (spins[row, column].Sign * spins[left.X, left.Y].Sign +
+                spins[row, column].Sign * spins[right.X, right.Y].Sign +
+                spins[row, column].Sign * spins[up.X, up.Y].Sign +
+                spins[row, column].Sign * spins[down.X, down.Y].Sign);
+            /*
+            double middle = 
+                spins[(row - 1 + gridSize) % gridSize, column] +
+                spins[(row + 1 + gridSize) % gridSize, column] +
+                spins[row, (column - 1 + gridSize) % gridSize] +
+                spins[row, (column + 1 + gridSize) % gridSize];
+
+            double energy = -J * spins[row, column] * middle;
+
+            return energy;
             */
         }
 
