@@ -140,20 +140,10 @@ namespace Randomizer
 
         private void TimerAnimate_Tick(object sender, EventArgs e)
         {
-            int row = rand.Next(0, _actualSize);
-            int column = rand.Next(0, _actualSize);
-            _spins[row, column].Sign = -_spins[row, column].Sign;
-
-            if (-_spins[row, column].Sign == -1)
-            {
-                --_positiveSpins;
-                ++_negativeSpins;
-            }
-            else
-            {
-                ++_positiveSpins;
-                --_negativeSpins;
-            }
+            //int row = rand.Next(0, _actualSize);
+            //int column = rand.Next(0, _actualSize);
+            //_spins[row, column].Sign = -_spins[row, column].Sign;
+            Metropolis();
 
             if (++montecarlo == _quantity)
             {
@@ -172,6 +162,17 @@ namespace Randomizer
             int row = rand.Next(0, _actualSize);
             int column = rand.Next(0, _actualSize);
 
+            int prevSum = 
+                _spins[(row - 1 + _actualSize) % _actualSize, column].Sign +
+                _spins[(row + 1 + _actualSize) % _actualSize, column].Sign +
+                _spins[row, (column - 1 + _actualSize) % _actualSize].Sign +
+                _spins[row, (column + 1 + _actualSize) % _actualSize].Sign;
+
+            if(prevSum * _spins[row, column].Sign <= 0)
+            {
+                _spins[row, column].Sign = -_spins[row, column].Sign;
+            }
+            /*
             // энергия исходного состояния спина
             int prevSum = _spins[(row - 1 + _actualSize) % _actualSize, column].Sign +
                 _spins[(row + 1 + _actualSize) % _actualSize, column].Sign +
@@ -186,6 +187,7 @@ namespace Randomizer
                 _spins[row, (column - 1 + _actualSize) % _actualSize].Sign +
                 _spins[row, (column + 1 + _actualSize) % _actualSize].Sign;
 
+            
             int diff = newSum - prevSum;
             double R = GetRandom(0, 1.1);
 
@@ -193,6 +195,7 @@ namespace Randomizer
             {
                 _newSpins.CopyTo(_spins, 0);
             }
+            */
         }
 
         private void DrawAll(PictureBox pcb, Spin[,] spins, int size)
