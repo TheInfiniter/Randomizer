@@ -1,5 +1,8 @@
 ﻿namespace Randomizer
 {
+    /// <summary>
+    /// Типы генерации спинов.
+    /// </summary>
     public enum SpinType
     {
         /// <summary>

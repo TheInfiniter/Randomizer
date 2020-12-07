@@ -49,6 +49,11 @@ namespace Randomizer
         /// <summary>
         /// Текущий тик таймера (хотя по задумке это текущий МКШ).
         /// </summary>
+        int _tick;
+
+        /// <summary>
+        /// Истинный МКШ.
+        /// </summary>
         int _montecarlo;
 
         /// <summary>
@@ -57,12 +62,12 @@ namespace Randomizer
         double _coefJ;
 
         /// <summary>
-        /// Общее количество используемых спинов
+        /// Общее количество используемых спинов.
         /// </summary>
         int _quantity;
 
         /// <summary>
-        /// Исходное состояние спинов
+        /// Текущее состояние спинов.
         /// </summary>
         Spin[,] _spins;
 
@@ -96,10 +101,10 @@ namespace Randomizer
 
         private void Window_Load(object sender, EventArgs e)
         {
-            btnCreate_Click(sender, e);
+            BtnCreate_Click(sender, e);
         }
 
-        private void btnCreate_Click(object sender, EventArgs e)
+        private void BtnCreate_Click(object sender, EventArgs e)
         {
             // красивый цвет фона
             _draw.Clear(Color.Wheat);
@@ -145,11 +150,11 @@ namespace Randomizer
             GetSpinsQuantity(_spins);
 
             // средняя намагниченность
-            _normalM = GetNormalM(_spins);
+            //_normalM = GetNormalM(_spins);
             labelMNorm.Text = _normalM.ToString();
 
             // средняя энергия
-            _normalE = GetNormalE(_spins, _cellSize);
+            //_normalE = GetNormalE(_spins, _cellSize);
             LabelENorm.Text = _normalE.ToString();
 
             // немного красоты на окошке
@@ -158,7 +163,11 @@ namespace Randomizer
 
             // и готовим плацдарм для метрополиса
             _montecarlo = 0;
-            LabelMonteCarlo.Text = _montecarlo.ToString();
+            LabelMetropolis.Text = _montecarlo.ToString();
+
+            _tick = 0;
+            LabelTimerTick.Text = _tick.ToString();
+
             BtnStart.Enabled = true;
         }
 
@@ -184,30 +193,35 @@ namespace Randomizer
         {
             _interval = Convert.ToInt32(TxtInterval.Text);
 
-            // выполняем сразу кучу шагов Метрополиса (иначе слишком медленно)
+            // выполняется сразу куча шагов Метрополиса (иначе слишком медленно)
             for (int i = 0; i < _interval; i++)
             {
                 Metropolis();
             }
 
-            if (++_montecarlo == _quantity)
+            LabelPositive.Text = _positiveSpins.ToString();
+            LabelNegative.Text = _negativeSpins.ToString();
+
+            if (_montecarlo > _quantity)
             {
-                //TimerAnimate.Enabled = false;
+                _normalM = GetNormalM(_spins);
+                _normalE = GetNormalE(_spins, _cellSize);
             }
 
-            // и снова считаем спины
-            GetSpinsQuantity(_spins);
-
-            //_normalM = GetNormalM(_spins);
-            labelMNorm.Text = _normalM.ToString();
-            LabelENorm.Text = _normalE.ToString();
+            // вычисляется средняя намагниченность и средняя энергия
+            labelMNorm.Text = Math.Abs(_normalM / _quantity).ToString();
+            LabelENorm.Text = (_normalE / _quantity).ToString();
 
             BarSpins.Value = _positiveSpins;
             LabelPercent.Text = GetPercent(_positiveSpins, _quantity).ToString() + "%";
 
-            LabelMonteCarlo.Text = _montecarlo.ToString();
+            _tick++;
+            LabelTimerTick.Text = _tick.ToString();
 
-            // рисуем обновленное состояние
+            _montecarlo += _interval;
+            LabelMetropolis.Text = _montecarlo.ToString();
+
+            // рисуется обновленное состояние
             DrawState(pcbMain, _spins, _cellSize);
         }
 
@@ -224,34 +238,46 @@ namespace Randomizer
             _coefJ = Convert.ToDouble(TxtCoefJ.Text);
             
             // энергия текущего состояния
-            double prevH = Energy(_spins, row, column, _coefJ, _cellSize);
+            double prevH = GetEnergy(_spins, row, column, _coefJ, _cellSize);
 
             // новое состояние, поворот спина, энергия нового состояния
             Spin[,] newSpins = (Spin[,])_spins.Clone();
             newSpins[row, column].Sign = -newSpins[row, column].Sign;
-            double nextH = Energy(newSpins, row, column, _coefJ, _cellSize);
+            double nextH = GetEnergy(newSpins, row, column, _coefJ, _cellSize);
 
             double diff = nextH - prevH;
             double w = Math.Exp(-diff / _temperature);
 
-            if (((diff) < 0) || (rand.Next(100) < (100 * w)))
+            if ((diff < 0) || (rand.Next(100) < (100 * w))) // принимается новое состояние, если одно из условий выполнено
             {
-                _spins = newSpins; // принимаем новое состояние, если условия выполнены
-                _normalM += 2 * _spins[row, column].Sign;
-                _normalE -= 2 * _spins[row, column].Sign * prevH;
+                _spins[row, column].Sign = -_spins[row, column].Sign;
+
+                if (_spins[row, column].Sign < 0)
+                {
+                    _positiveSpins--;
+                    _negativeSpins++;
+                }
+                else
+                {
+                    _positiveSpins++;
+                    _negativeSpins--;
+                }
+                
+                //_normalM += 2 * _spins[row, column].Sign;
+                //_normalE -= 2 * _spins[row, column].Sign * prevH;
             }
         }
 
         /// <summary>
-        /// Энергия соседей спина.
+        /// Вычислить энергию взаимодействия с соседями спина.
         /// </summary>
         /// <param name="spins">Матрица спинов.</param>
         /// <param name="row">Строка нужного спина.</param>
         /// <param name="column">Столбец нужного спина.</param>
-        /// <param name="J">Коэффициент взаимодействия.</param>
+        /// <param name="J">Энергия взаимодействия соседей.</param>
         /// <param name="gridSize">Размер матрицы спинов.</param>
         /// <returns>Значение энергии взаимодействия выбранного спина с соседями.</returns>
-        private double Energy(Spin[,] spins, int row, int column, double J, int gridSize)
+        private double GetEnergy(Spin[,] spins, int row, int column, double J, int gridSize)
         {
             Point left = new Point
             {
@@ -306,6 +332,11 @@ namespace Randomizer
             return positiveSpins / quantity * 100;
         }
 
+        /// <summary>
+        /// Получить среднюю намагниченность (на самом деле она нифига не средняя).
+        /// </summary>
+        /// <param name="spins">Состояние спинов.</param>
+        /// <returns>Значение намагниченности.</returns>
         private double GetNormalM(Spin[,] spins)
         {
             int outerEdge = 1;
@@ -322,17 +353,22 @@ namespace Randomizer
             return res;
         }
 
+        /// <summary>
+        /// Получить среднюю энергию (на самом деле нифига она не средняя).
+        /// </summary>
+        /// <param name="spins">Состояние спинов.</param>
+        /// <param name="size">Размер решетки спинов.</param>
+        /// <returns>Значение энергии</returns>
         private double GetNormalE(Spin[,] spins, int size)
         {
-            int outerEdge = 1;
+            int outerEdge = 0;
             double res = 0;
 
             for (int i = outerEdge; i < size - outerEdge; i++)
             {
                 for (int j = outerEdge; j < size - outerEdge; j++)
                 {
-                    res += (i + 1 != size - outerEdge) ? spins[i, j].Sign * spins[i + 1, j].Sign : 0;
-                    res += (j + 1 != size - outerEdge) ? spins[i, j].Sign * spins[i + 1, j].Sign : 0;
+                    res += GetEnergy(spins, i, j, _coefJ, size - outerEdge);
                 }
             }
             
@@ -539,6 +575,24 @@ namespace Randomizer
             }
 
             return spins;
+        }
+
+        /// <summary>
+        /// Получить значение теплоемкости.
+        /// </summary>
+        /// <returns></returns>
+        private double GetHeatCapacity()
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Получить значение магнитной восприимчивости.
+        /// </summary>
+        /// <returns></returns>
+        private double GetMagneticSensibility()
+        {
+            throw new NotImplementedException();
         }
     }
 }
