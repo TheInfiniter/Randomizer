@@ -92,11 +92,10 @@ namespace Randomizer
             _draw.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
 
             CmbAmount.SelectedIndex = 1;
-            CmbMultiplierT.SelectedIndex = 0;
 
             rand = new Random();
 
-            _interval = Convert.ToInt32(TxtInterval.Text);
+            _interval = int.Parse(TxtInterval.Text);
         }
 
         private void Window_Load(object sender, EventArgs e)
@@ -114,7 +113,7 @@ namespace Randomizer
             BtnStart.Text = "Запуск";
 
             // задаем переменные
-            _actualSize = Convert.ToInt32(CmbAmount.SelectedItem);
+            _actualSize = int.Parse((string)CmbAmount.SelectedItem);
             _quantity = (int)Math.Pow(_actualSize, 2);
 
             _cellSize = _actualSize + 2;
@@ -173,9 +172,9 @@ namespace Randomizer
 
         private void BtnStart_Click(object sender, EventArgs e)
         {
-            _temperature = Convert.ToDouble(TxtCritT.Text) * Convert.ToDouble(CmbMultiplierT.SelectedItem);
-            _coefJ = Convert.ToDouble(TxtCoefJ.Text);
-            _interval = Convert.ToInt32(TxtInterval.Text);
+            _temperature = double.Parse(TxtCritT.Text) * double.Parse(TxtMultiplierT.Text);
+            _coefJ = double.Parse(TxtCoefJ.Text);
+            _interval = int.Parse(TxtInterval.Text);
 
             if (!TimerAnimate.Enabled)
             {
@@ -191,7 +190,7 @@ namespace Randomizer
 
         private void TimerAnimate_Tick(object sender, EventArgs e)
         {
-            _interval = Convert.ToInt32(TxtInterval.Text);
+            _interval = int.Parse(TxtInterval.Text);
 
             // выполняется сразу куча шагов Метрополиса (иначе слишком медленно)
             for (int i = 0; i < _interval; i++)
@@ -219,7 +218,7 @@ namespace Randomizer
             LabelTimerTick.Text = _tick.ToString();
 
             _montecarlo += _interval;
-            LabelMetropolis.Text = _montecarlo.ToString();
+            LabelMetropolis.Text = (_montecarlo / _quantity).ToString();
 
             // рисуется обновленное состояние
             DrawState(pcbMain, _spins, _cellSize);
@@ -234,9 +233,9 @@ namespace Randomizer
             int row = rand.Next(_cellSize);
             int column = rand.Next(_cellSize);
 
-            _temperature = Convert.ToDouble(TxtCritT.Text) * Convert.ToDouble(CmbMultiplierT.SelectedItem);
-            _coefJ = Convert.ToDouble(TxtCoefJ.Text);
-            
+            _temperature = double.Parse(TxtCritT.Text) * double.Parse(TxtMultiplierT.Text);
+            _coefJ = double.Parse(TxtCoefJ.Text);
+
             // энергия текущего состояния
             double prevH = GetEnergy(_spins, row, column, _coefJ, _cellSize);
 
