@@ -38,9 +38,9 @@
             this.label8 = new System.Windows.Forms.Label();
             this.radioPositiveSpins = new System.Windows.Forms.RadioButton();
             this.TxtInterval = new System.Windows.Forms.TextBox();
+            this.CmbAmount = new System.Windows.Forms.ComboBox();
             this.label4 = new System.Windows.Forms.Label();
             this.LabelTotal = new System.Windows.Forms.Label();
-            this.CmbAmount = new System.Windows.Forms.ComboBox();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
             this.LabelPositive = new System.Windows.Forms.Label();
@@ -48,16 +48,19 @@
             this.groupBox2 = new System.Windows.Forms.GroupBox();
             this.label5 = new System.Windows.Forms.Label();
             this.TxtCoefJ = new System.Windows.Forms.TextBox();
-            this.CmbMultiplierT = new System.Windows.Forms.ComboBox();
             this.label7 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
             this.TxtCritT = new System.Windows.Forms.TextBox();
             this.TimerAnimate = new System.Windows.Forms.Timer(this.components);
             this.BtnStart = new System.Windows.Forms.Button();
             this.groupBox3 = new System.Windows.Forms.GroupBox();
+            this.label14 = new System.Windows.Forms.Label();
+            this.LabelTimerTick = new System.Windows.Forms.Label();
             this.label9 = new System.Windows.Forms.Label();
             this.LabelMetropolis = new System.Windows.Forms.Label();
             this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.label16 = new System.Windows.Forms.Label();
+            this.LabelHi = new System.Windows.Forms.Label();
             this.label10 = new System.Windows.Forms.Label();
             this.LabelHeat = new System.Windows.Forms.Label();
             this.label12 = new System.Windows.Forms.Label();
@@ -66,10 +69,7 @@
             this.labelMNorm = new System.Windows.Forms.Label();
             this.BarSpins = new System.Windows.Forms.ProgressBar();
             this.LabelPercent = new System.Windows.Forms.Label();
-            this.label14 = new System.Windows.Forms.Label();
-            this.LabelTimerTick = new System.Windows.Forms.Label();
-            this.label16 = new System.Windows.Forms.Label();
-            this.LabelHi = new System.Windows.Forms.Label();
+            this.TxtMultiplierT = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pcbMain)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -167,7 +167,22 @@
             this.TxtInterval.Name = "TxtInterval";
             this.TxtInterval.Size = new System.Drawing.Size(45, 20);
             this.TxtInterval.TabIndex = 25;
-            this.TxtInterval.Text = "100";
+            this.TxtInterval.Text = "1000";
+            // 
+            // CmbAmount
+            // 
+            this.CmbAmount.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.CmbAmount.FormattingEnabled = true;
+            this.CmbAmount.Items.AddRange(new object[] {
+            "20",
+            "50",
+            "100",
+            "200",
+            "500"});
+            this.CmbAmount.Location = new System.Drawing.Point(280, 18);
+            this.CmbAmount.Name = "CmbAmount";
+            this.CmbAmount.Size = new System.Drawing.Size(45, 21);
+            this.CmbAmount.TabIndex = 11;
             // 
             // label4
             // 
@@ -186,21 +201,6 @@
             this.LabelTotal.TabIndex = 10;
             this.LabelTotal.Text = "0";
             this.LabelTotal.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // CmbAmount
-            // 
-            this.CmbAmount.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CmbAmount.FormattingEnabled = true;
-            this.CmbAmount.Items.AddRange(new object[] {
-            "20",
-            "50",
-            "100",
-            "200",
-            "500"});
-            this.CmbAmount.Location = new System.Drawing.Point(280, 18);
-            this.CmbAmount.Name = "CmbAmount";
-            this.CmbAmount.Size = new System.Drawing.Size(45, 21);
-            this.CmbAmount.TabIndex = 11;
             // 
             // label2
             // 
@@ -240,9 +240,9 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.TxtMultiplierT);
             this.groupBox2.Controls.Add(this.label5);
             this.groupBox2.Controls.Add(this.TxtCoefJ);
-            this.groupBox2.Controls.Add(this.CmbMultiplierT);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.TxtCritT);
@@ -269,19 +269,6 @@
             this.TxtCoefJ.Size = new System.Drawing.Size(45, 20);
             this.TxtCoefJ.TabIndex = 25;
             this.TxtCoefJ.Text = "1";
-            // 
-            // CmbMultiplierT
-            // 
-            this.CmbMultiplierT.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.CmbMultiplierT.FormattingEnabled = true;
-            this.CmbMultiplierT.Items.AddRange(new object[] {
-            "0.5",
-            "1",
-            "1.5"});
-            this.CmbMultiplierT.Location = new System.Drawing.Point(105, 41);
-            this.CmbMultiplierT.Name = "CmbMultiplierT";
-            this.CmbMultiplierT.Size = new System.Drawing.Size(45, 21);
-            this.CmbMultiplierT.TabIndex = 24;
             // 
             // label7
             // 
@@ -337,13 +324,31 @@
             this.groupBox3.Controls.Add(this.LabelTotal);
             this.groupBox3.Controls.Add(this.LabelMetropolis);
             this.groupBox3.Location = new System.Drawing.Point(749, 11);
-            this.groupBox3.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox3.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox3.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox3.Size = new System.Drawing.Size(177, 122);
             this.groupBox3.TabIndex = 29;
             this.groupBox3.TabStop = false;
             this.groupBox3.Text = "Спины";
+            // 
+            // label14
+            // 
+            this.label14.Location = new System.Drawing.Point(5, 91);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(107, 20);
+            this.label14.TabIndex = 22;
+            this.label14.Text = "Тик таймера";
+            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelTimerTick
+            // 
+            this.LabelTimerTick.Location = new System.Drawing.Point(118, 91);
+            this.LabelTimerTick.Name = "LabelTimerTick";
+            this.LabelTimerTick.Size = new System.Drawing.Size(46, 20);
+            this.LabelTimerTick.TabIndex = 21;
+            this.LabelTimerTick.Text = "0";
+            this.LabelTimerTick.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label9
             // 
@@ -374,13 +379,31 @@
             this.groupBox4.Controls.Add(this.LabelENorm);
             this.groupBox4.Controls.Add(this.labelMNorm);
             this.groupBox4.Location = new System.Drawing.Point(749, 165);
-            this.groupBox4.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox4.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox4.Name = "groupBox4";
-            this.groupBox4.Padding = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.groupBox4.Padding = new System.Windows.Forms.Padding(2);
             this.groupBox4.Size = new System.Drawing.Size(177, 108);
             this.groupBox4.TabIndex = 30;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Информация";
+            // 
+            // label16
+            // 
+            this.label16.Location = new System.Drawing.Point(5, 74);
+            this.label16.Name = "label16";
+            this.label16.Size = new System.Drawing.Size(106, 20);
+            this.label16.TabIndex = 22;
+            this.label16.Text = "Восприимчивость";
+            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // LabelHi
+            // 
+            this.LabelHi.Location = new System.Drawing.Point(118, 74);
+            this.LabelHi.Name = "LabelHi";
+            this.LabelHi.Size = new System.Drawing.Size(46, 20);
+            this.LabelHi.TabIndex = 21;
+            this.LabelHi.Text = "0";
+            this.LabelHi.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label10
             // 
@@ -439,7 +462,7 @@
             // BarSpins
             // 
             this.BarSpins.Location = new System.Drawing.Point(9, 527);
-            this.BarSpins.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.BarSpins.Margin = new System.Windows.Forms.Padding(2);
             this.BarSpins.MarqueeAnimationSpeed = 100000;
             this.BarSpins.Name = "BarSpins";
             this.BarSpins.Size = new System.Drawing.Size(686, 27);
@@ -455,41 +478,13 @@
             this.LabelPercent.Text = "0%";
             this.LabelPercent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // label14
+            // TxtMultiplierT
             // 
-            this.label14.Location = new System.Drawing.Point(5, 91);
-            this.label14.Name = "label14";
-            this.label14.Size = new System.Drawing.Size(107, 20);
-            this.label14.TabIndex = 22;
-            this.label14.Text = "Тик таймера";
-            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelTimerTick
-            // 
-            this.LabelTimerTick.Location = new System.Drawing.Point(118, 91);
-            this.LabelTimerTick.Name = "LabelTimerTick";
-            this.LabelTimerTick.Size = new System.Drawing.Size(46, 20);
-            this.LabelTimerTick.TabIndex = 21;
-            this.LabelTimerTick.Text = "0";
-            this.LabelTimerTick.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // label16
-            // 
-            this.label16.Location = new System.Drawing.Point(5, 74);
-            this.label16.Name = "label16";
-            this.label16.Size = new System.Drawing.Size(106, 20);
-            this.label16.TabIndex = 22;
-            this.label16.Text = "Восприимчивость";
-            this.label16.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // LabelHi
-            // 
-            this.LabelHi.Location = new System.Drawing.Point(118, 74);
-            this.LabelHi.Name = "LabelHi";
-            this.LabelHi.Size = new System.Drawing.Size(46, 20);
-            this.LabelHi.TabIndex = 21;
-            this.LabelHi.Text = "0";
-            this.LabelHi.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            this.TxtMultiplierT.Location = new System.Drawing.Point(105, 42);
+            this.TxtMultiplierT.Name = "TxtMultiplierT";
+            this.TxtMultiplierT.Size = new System.Drawing.Size(45, 20);
+            this.TxtMultiplierT.TabIndex = 27;
+            this.TxtMultiplierT.Text = "0.5";
             // 
             // Window
             // 
@@ -544,7 +539,6 @@
         private System.Windows.Forms.TextBox TxtCritT;
         private System.Windows.Forms.Timer TimerAnimate;
         private System.Windows.Forms.Button BtnStart;
-        private System.Windows.Forms.ComboBox CmbMultiplierT;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.Label label8;
         private System.Windows.Forms.TextBox TxtInterval;
@@ -566,6 +560,7 @@
         private System.Windows.Forms.Label LabelTimerTick;
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label LabelHi;
+        private System.Windows.Forms.TextBox TxtMultiplierT;
     }
 }
 
