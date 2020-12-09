@@ -70,6 +70,8 @@
             this.BarSpins = new System.Windows.Forms.ProgressBar();
             this.LabelPercent = new System.Windows.Forms.Label();
             this.TxtMultiplierT = new System.Windows.Forms.TextBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.TxtMKSH = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pcbMain)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
@@ -108,10 +110,8 @@
             // 
             this.groupBox1.Controls.Add(this.radioAllSpins);
             this.groupBox1.Controls.Add(this.radioNegativeSpins);
-            this.groupBox1.Controls.Add(this.label8);
             this.groupBox1.Controls.Add(this.radioPositiveSpins);
             this.groupBox1.Controls.Add(this.label1);
-            this.groupBox1.Controls.Add(this.TxtInterval);
             this.groupBox1.Controls.Add(this.CmbAmount);
             this.groupBox1.Location = new System.Drawing.Point(10, 560);
             this.groupBox1.Name = "groupBox1";
@@ -144,9 +144,9 @@
             // 
             // label8
             // 
-            this.label8.Location = new System.Drawing.Point(166, 63);
+            this.label8.Location = new System.Drawing.Point(156, 16);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(111, 18);
+            this.label8.Size = new System.Drawing.Size(96, 18);
             this.label8.TabIndex = 26;
             this.label8.Text = "Вычислений в с";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -163,7 +163,7 @@
             // 
             // TxtInterval
             // 
-            this.TxtInterval.Location = new System.Drawing.Point(280, 63);
+            this.TxtInterval.Location = new System.Drawing.Point(258, 16);
             this.TxtInterval.Name = "TxtInterval";
             this.TxtInterval.Size = new System.Drawing.Size(45, 20);
             this.TxtInterval.TabIndex = 25;
@@ -240,15 +240,19 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label11);
+            this.groupBox2.Controls.Add(this.TxtMKSH);
             this.groupBox2.Controls.Add(this.TxtMultiplierT);
             this.groupBox2.Controls.Add(this.label5);
+            this.groupBox2.Controls.Add(this.label8);
             this.groupBox2.Controls.Add(this.TxtCoefJ);
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Controls.Add(this.label6);
+            this.groupBox2.Controls.Add(this.TxtInterval);
             this.groupBox2.Controls.Add(this.TxtCritT);
             this.groupBox2.Location = new System.Drawing.Point(346, 560);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(161, 95);
+            this.groupBox2.Size = new System.Drawing.Size(313, 95);
             this.groupBox2.TabIndex = 21;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Метрополис";
@@ -305,7 +309,7 @@
             this.BtnStart.Enabled = false;
             this.BtnStart.Location = new System.Drawing.Point(346, 661);
             this.BtnStart.Name = "BtnStart";
-            this.BtnStart.Size = new System.Drawing.Size(161, 33);
+            this.BtnStart.Size = new System.Drawing.Size(313, 33);
             this.BtnStart.TabIndex = 22;
             this.BtnStart.Text = "Запуск";
             this.BtnStart.UseVisualStyleBackColor = true;
@@ -486,6 +490,23 @@
             this.TxtMultiplierT.TabIndex = 27;
             this.TxtMultiplierT.Text = "0.5";
             // 
+            // label11
+            // 
+            this.label11.Location = new System.Drawing.Point(156, 42);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(96, 20);
+            this.label11.TabIndex = 29;
+            this.label11.Text = "Количество МКШ";
+            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // TxtMKSH
+            // 
+            this.TxtMKSH.Location = new System.Drawing.Point(258, 42);
+            this.TxtMKSH.Name = "TxtMKSH";
+            this.TxtMKSH.Size = new System.Drawing.Size(45, 20);
+            this.TxtMKSH.TabIndex = 28;
+            this.TxtMKSH.Text = "100";
+            // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -561,6 +582,8 @@
         private System.Windows.Forms.Label label16;
         private System.Windows.Forms.Label LabelHi;
         private System.Windows.Forms.TextBox TxtMultiplierT;
+        private System.Windows.Forms.Label label11;
+        private System.Windows.Forms.TextBox TxtMKSH;
     }
 }
 

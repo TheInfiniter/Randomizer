@@ -54,7 +54,13 @@ namespace Randomizer
         /// <summary>
         /// Истинный МКШ.
         /// </summary>
+        int _metropolis;
         int _montecarlo;
+
+        /// <summary>
+        /// Необходимое количество МКШ.
+        /// </summary>
+        int _requiredMKSH;
 
         /// <summary>
         /// Коэффициент J (для ферромагнетиков > 0, для антиферромагнетиков < 0).
@@ -175,6 +181,7 @@ namespace Randomizer
             _temperature = double.Parse(TxtCritT.Text) * double.Parse(TxtMultiplierT.Text);
             _coefJ = double.Parse(TxtCoefJ.Text);
             _interval = int.Parse(TxtInterval.Text);
+            _requiredMKSH = int.Parse(TxtMKSH.Text);
 
             if (!TimerAnimate.Enabled)
             {
@@ -201,7 +208,7 @@ namespace Randomizer
             LabelPositive.Text = _positiveSpins.ToString();
             LabelNegative.Text = _negativeSpins.ToString();
 
-            if (_montecarlo > _quantity)
+            if (_metropolis > _requiredMKSH)
             {
                 _normalM = GetNormalM(_spins);
                 _normalE = GetNormalE(_spins, _cellSize);
@@ -218,7 +225,8 @@ namespace Randomizer
             LabelTimerTick.Text = _tick.ToString();
 
             _montecarlo += _interval;
-            LabelMetropolis.Text = (_montecarlo / _quantity).ToString();
+            _metropolis = _montecarlo / _quantity;
+            LabelMetropolis.Text = _metropolis.ToString();
 
             // рисуется обновленное состояние
             DrawState(pcbMain, _spins, _cellSize);
