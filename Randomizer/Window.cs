@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Threading;
 using System.Windows.Forms;
 
 namespace Randomizer
@@ -15,6 +17,7 @@ namespace Randomizer
         /// Температура системы (критическая * множитель).
         /// </summary>
         double _temperature;
+        double _criticalT;
 
         /// <summary>
         /// Сторона ячейки (actualSize + 2)
@@ -87,6 +90,9 @@ namespace Randomizer
         /// </summary>
         double _normalE;
 
+        List<NormalValue> _result;
+        double _tempStart, _tempStop, _tempStep;
+
         Random rand;
 
         public Window()
@@ -113,6 +119,7 @@ namespace Randomizer
         {
             // красивый цвет фона
             _draw.Clear(Color.Wheat);
+
 
             // тормозим таймер на всякий случай
             TimerAnimate.Stop();
@@ -195,14 +202,45 @@ namespace Randomizer
             }
         }
 
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        //////////////////////////////////////////////////////////////////////
+        public struct NormalValue
+        {
+            public NormalValue(double M,double E,double T)
+            {
+                this.M = M;
+                this.E = E;
+                this.Temp = T;
+            }
+            public double Temp { get; set; }
+            public double M { get; set; }
+            public double E { get; set; }
+        }
+        
         private void TimerAnimate_Tick(object sender, EventArgs e)
         {
             _interval = int.Parse(TxtInterval.Text);
+            _temperature = double.Parse(TxtCritT.Text) * double.Parse(TxtMultiplierT.Text);
 
             // выполняется сразу куча шагов Метрополиса (иначе слишком медленно)
             for (int i = 0; i < _interval; i++)
             {
-                Metropolis();
+                Metropolis(_temperature);
             }
 
             LabelPositive.Text = _positiveSpins.ToString();
@@ -215,7 +253,7 @@ namespace Randomizer
             }
 
             // вычисляется средняя намагниченность и средняя энергия
-            labelMNorm.Text = Math.Abs(_normalM / _quantity).ToString();
+            labelMNorm.Text = Math.Abs(_normalM/ _quantity).ToString();
             LabelENorm.Text = (_normalE / _quantity).ToString();
 
             BarSpins.Value = _positiveSpins;
@@ -235,13 +273,13 @@ namespace Randomizer
         /// <summary>
         /// Один шаг алгоритма Метрополиса.
         /// </summary>
-        private void Metropolis()
+        private void Metropolis(double temperature)
         {
             // случайные координаты
             int row = rand.Next(_cellSize);
             int column = rand.Next(_cellSize);
 
-            _temperature = double.Parse(TxtCritT.Text) * double.Parse(TxtMultiplierT.Text);
+            //_temperature = double.Parse(TxtCritT.Text) * double.Parse(TxtMultiplierT.Text);
             _coefJ = double.Parse(TxtCoefJ.Text);
 
             // энергия текущего состояния
@@ -253,7 +291,7 @@ namespace Randomizer
             double nextH = GetEnergy(newSpins, row, column, _coefJ, _cellSize);
 
             double diff = nextH - prevH;
-            double w = Math.Exp(-diff / _temperature);
+            double w = Math.Exp(-diff / temperature);
 
             if ((diff < 0) || (rand.Next(100) < (100 * w))) // принимается новое состояние, если одно из условий выполнено
             {
@@ -462,9 +500,9 @@ namespace Randomizer
             double widthStep = width / (size);
             double heightStep = height / (size);
 
-            for (int i = 0; i < size; i++)
+            for (int i = 1; i < size-1; i++)
             {
-                for (int j = 0; j < size; j++)
+                for (int j = 1; j < size-1; j++)
                 {
                     if (spins[i, j].Sign == 1)
                     {
@@ -472,7 +510,7 @@ namespace Randomizer
                     }
                     else if (spins[i, j].Sign == -1)
                     {
-                        _draw.FillRectangle(brushNavy, (float)(spins[i, j].X - widthStep / 2), (float)(spins[i, j].Y - heightStep / 2), 2 * (float)widthStep, (float)heightStep);
+                        _draw.FillRectangle(brushNavy, (float)(spins[i, j].X - widthStep / 2), (float)(spins[i, j].Y - heightStep / 2), (float)widthStep, (float)heightStep);
                     }
                     else if (spins[i, j].Sign == 0)
                     {
@@ -600,6 +638,79 @@ namespace Randomizer
         private double GetMagneticSensibility()
         {
             throw new NotImplementedException();
+        }
+
+        private void TimerNormal_Tick(object sender, EventArgs e)
+        {
+            Recursion(_result, _tempStart);
+
+            int count = _result.Count;
+
+            ChartNormalM.Series[0].Points.AddXY(_result[count - 1].Temp, _result[count - 1].M);
+            ChartNormalE.Series[0].Points.AddXY(_result[count - 1].Temp, _result[count - 1].E);
+
+            _tempStart += _tempStep;
+
+            if(_tempStart > _tempStop)
+            {
+                TimerNormal.Stop();
+                BtnCalcNormal.Enabled = true;
+            }
+        }
+
+        private void Recursion(List<NormalValue> result, double temp)
+        {
+            /*
+            double tempStart = 0.3;
+            double tempStop = 1.5;
+            List<NormalValue> result = new List<NormalValue>();
+            */
+            double normalM = 0;
+            double normalE = 0;
+
+            temp *= _criticalT;
+
+            for (int i = 0; i < Convert.ToInt32(TxtMKSH.Text); i++)
+            {
+                for (int j = 0; j < Convert.ToInt32(TxtInterval.Text); j++)
+                {
+                    Metropolis(temp);
+                }
+            }
+
+            normalM = Math.Abs(GetNormalM(_spins)) / _quantity;
+            normalE = GetNormalE(_spins, _cellSize) / _quantity;
+            result.Add(new NormalValue(normalM, normalE, temp));
+            //tempStart += 0.05;
+
+            /*
+            while (tempStart < tempStop)
+            {
+                
+            }
+            
+            for (int j = 0; j < result.Count; j++)
+            {
+                ChartNormalM.Series[0].Points.AddXY(result[j].Temp, result[j].M);
+            }
+            */
+        }
+
+        private void BtnCalcNormal_Click(object sender, EventArgs e)
+        {
+            _result = new List<NormalValue>();
+
+            _tempStart = double.Parse(TxtMinT.Text);
+            _tempStop = double.Parse(TxtMaxT.Text);
+            _tempStep = double.Parse(TxtStepT.Text);
+            _criticalT = double.Parse(TxtCritT.Text);
+
+            ChartNormalE.Series[0].Points.Clear();
+            ChartNormalM.Series[0].Points.Clear();
+
+            TimerNormal.Start();
+            BtnCalcNormal.Enabled = false;
+            //Recursion();
         }
     }
 }

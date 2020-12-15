@@ -29,16 +29,24 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea3 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend3 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series3 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title3 = new System.Windows.Forms.DataVisualization.Charting.Title();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea4 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend4 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series4 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.Title title4 = new System.Windows.Forms.DataVisualization.Charting.Title();
             this.pcbMain = new System.Windows.Forms.PictureBox();
             this.BtnCreate = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.radioAllSpins = new System.Windows.Forms.RadioButton();
             this.radioNegativeSpins = new System.Windows.Forms.RadioButton();
-            this.label8 = new System.Windows.Forms.Label();
             this.radioPositiveSpins = new System.Windows.Forms.RadioButton();
-            this.TxtInterval = new System.Windows.Forms.TextBox();
             this.CmbAmount = new System.Windows.Forms.ComboBox();
+            this.label8 = new System.Windows.Forms.Label();
+            this.TxtInterval = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.LabelTotal = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
@@ -46,6 +54,9 @@
             this.LabelPositive = new System.Windows.Forms.Label();
             this.LabelNegative = new System.Windows.Forms.Label();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.TxtMKSH = new System.Windows.Forms.TextBox();
+            this.TxtMultiplierT = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
             this.TxtCoefJ = new System.Windows.Forms.TextBox();
             this.label7 = new System.Windows.Forms.Label();
@@ -69,14 +80,25 @@
             this.labelMNorm = new System.Windows.Forms.Label();
             this.BarSpins = new System.Windows.Forms.ProgressBar();
             this.LabelPercent = new System.Windows.Forms.Label();
-            this.TxtMultiplierT = new System.Windows.Forms.TextBox();
-            this.label11 = new System.Windows.Forms.Label();
-            this.TxtMKSH = new System.Windows.Forms.TextBox();
+            this.BtnCalcNormal = new System.Windows.Forms.Button();
+            this.ChartNormalM = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.ChartNormalE = new System.Windows.Forms.DataVisualization.Charting.Chart();
+            this.TimerNormal = new System.Windows.Forms.Timer(this.components);
+            this.groupBox5 = new System.Windows.Forms.GroupBox();
+            this.TxtStepT = new System.Windows.Forms.TextBox();
+            this.label15 = new System.Windows.Forms.Label();
+            this.TxtMaxT = new System.Windows.Forms.TextBox();
+            this.label19 = new System.Windows.Forms.Label();
+            this.label20 = new System.Windows.Forms.Label();
+            this.TxtMinT = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pcbMain)).BeginInit();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.groupBox3.SuspendLayout();
             this.groupBox4.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ChartNormalM)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ChartNormalE)).BeginInit();
+            this.groupBox5.SuspendLayout();
             this.SuspendLayout();
             // 
             // pcbMain
@@ -142,15 +164,6 @@
             this.radioNegativeSpins.Text = "Только отрицательные";
             this.radioNegativeSpins.UseVisualStyleBackColor = true;
             // 
-            // label8
-            // 
-            this.label8.Location = new System.Drawing.Point(156, 16);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(96, 18);
-            this.label8.TabIndex = 26;
-            this.label8.Text = "Вычислений в с";
-            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
             // radioPositiveSpins
             // 
             this.radioPositiveSpins.AutoSize = true;
@@ -160,14 +173,6 @@
             this.radioPositiveSpins.TabIndex = 14;
             this.radioPositiveSpins.Text = "Только положительные";
             this.radioPositiveSpins.UseVisualStyleBackColor = true;
-            // 
-            // TxtInterval
-            // 
-            this.TxtInterval.Location = new System.Drawing.Point(258, 16);
-            this.TxtInterval.Name = "TxtInterval";
-            this.TxtInterval.Size = new System.Drawing.Size(45, 20);
-            this.TxtInterval.TabIndex = 25;
-            this.TxtInterval.Text = "1000";
             // 
             // CmbAmount
             // 
@@ -183,6 +188,23 @@
             this.CmbAmount.Name = "CmbAmount";
             this.CmbAmount.Size = new System.Drawing.Size(45, 21);
             this.CmbAmount.TabIndex = 11;
+            // 
+            // label8
+            // 
+            this.label8.Location = new System.Drawing.Point(156, 16);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(96, 18);
+            this.label8.TabIndex = 26;
+            this.label8.Text = "Вычислений в с";
+            this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // TxtInterval
+            // 
+            this.TxtInterval.Location = new System.Drawing.Point(258, 16);
+            this.TxtInterval.Name = "TxtInterval";
+            this.TxtInterval.Size = new System.Drawing.Size(45, 20);
+            this.TxtInterval.TabIndex = 25;
+            this.TxtInterval.Text = "1000";
             // 
             // label4
             // 
@@ -257,6 +279,31 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "Метрополис";
             // 
+            // label11
+            // 
+            this.label11.Location = new System.Drawing.Point(156, 42);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(96, 20);
+            this.label11.TabIndex = 29;
+            this.label11.Text = "Количество МКШ";
+            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // TxtMKSH
+            // 
+            this.TxtMKSH.Location = new System.Drawing.Point(258, 42);
+            this.TxtMKSH.Name = "TxtMKSH";
+            this.TxtMKSH.Size = new System.Drawing.Size(45, 20);
+            this.TxtMKSH.TabIndex = 28;
+            this.TxtMKSH.Text = "100";
+            // 
+            // TxtMultiplierT
+            // 
+            this.TxtMultiplierT.Location = new System.Drawing.Point(105, 42);
+            this.TxtMultiplierT.Name = "TxtMultiplierT";
+            this.TxtMultiplierT.Size = new System.Drawing.Size(45, 20);
+            this.TxtMultiplierT.TabIndex = 27;
+            this.TxtMultiplierT.Text = "0.5";
+            // 
             // label5
             // 
             this.label5.Location = new System.Drawing.Point(9, 68);
@@ -327,7 +374,7 @@
             this.groupBox3.Controls.Add(this.LabelNegative);
             this.groupBox3.Controls.Add(this.LabelTotal);
             this.groupBox3.Controls.Add(this.LabelMetropolis);
-            this.groupBox3.Location = new System.Drawing.Point(749, 11);
+            this.groupBox3.Location = new System.Drawing.Point(10, 699);
             this.groupBox3.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox3.Name = "groupBox3";
             this.groupBox3.Padding = new System.Windows.Forms.Padding(2);
@@ -382,11 +429,11 @@
             this.groupBox4.Controls.Add(this.label13);
             this.groupBox4.Controls.Add(this.LabelENorm);
             this.groupBox4.Controls.Add(this.labelMNorm);
-            this.groupBox4.Location = new System.Drawing.Point(749, 165);
+            this.groupBox4.Location = new System.Drawing.Point(191, 705);
             this.groupBox4.Margin = new System.Windows.Forms.Padding(2);
             this.groupBox4.Name = "groupBox4";
             this.groupBox4.Padding = new System.Windows.Forms.Padding(2);
-            this.groupBox4.Size = new System.Drawing.Size(177, 108);
+            this.groupBox4.Size = new System.Drawing.Size(177, 116);
             this.groupBox4.TabIndex = 30;
             this.groupBox4.TabStop = false;
             this.groupBox4.Text = "Информация";
@@ -465,11 +512,11 @@
             // 
             // BarSpins
             // 
-            this.BarSpins.Location = new System.Drawing.Point(9, 527);
+            this.BarSpins.Location = new System.Drawing.Point(10, 527);
             this.BarSpins.Margin = new System.Windows.Forms.Padding(2);
             this.BarSpins.MarqueeAnimationSpeed = 100000;
             this.BarSpins.Name = "BarSpins";
-            this.BarSpins.Size = new System.Drawing.Size(686, 27);
+            this.BarSpins.Size = new System.Drawing.Size(685, 27);
             this.BarSpins.Step = 1;
             this.BarSpins.TabIndex = 31;
             // 
@@ -482,36 +529,146 @@
             this.LabelPercent.Text = "0%";
             this.LabelPercent.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // TxtMultiplierT
+            // BtnCalcNormal
             // 
-            this.TxtMultiplierT.Location = new System.Drawing.Point(105, 42);
-            this.TxtMultiplierT.Name = "TxtMultiplierT";
-            this.TxtMultiplierT.Size = new System.Drawing.Size(45, 20);
-            this.TxtMultiplierT.TabIndex = 27;
-            this.TxtMultiplierT.Text = "0.5";
+            this.BtnCalcNormal.Location = new System.Drawing.Point(829, 661);
+            this.BtnCalcNormal.Margin = new System.Windows.Forms.Padding(2);
+            this.BtnCalcNormal.Name = "BtnCalcNormal";
+            this.BtnCalcNormal.Size = new System.Drawing.Size(345, 33);
+            this.BtnCalcNormal.TabIndex = 32;
+            this.BtnCalcNormal.Text = "Зависимость";
+            this.BtnCalcNormal.UseVisualStyleBackColor = true;
+            this.BtnCalcNormal.Click += new System.EventHandler(this.BtnCalcNormal_Click);
             // 
-            // label11
+            // ChartNormalM
             // 
-            this.label11.Location = new System.Drawing.Point(156, 42);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(96, 20);
-            this.label11.TabIndex = 29;
-            this.label11.Text = "Количество МКШ";
-            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            chartArea3.Name = "ChartArea1";
+            this.ChartNormalM.ChartAreas.Add(chartArea3);
+            legend3.Enabled = false;
+            legend3.Name = "Legend1";
+            this.ChartNormalM.Legends.Add(legend3);
+            this.ChartNormalM.Location = new System.Drawing.Point(749, 11);
+            this.ChartNormalM.Margin = new System.Windows.Forms.Padding(2);
+            this.ChartNormalM.Name = "ChartNormalM";
+            series3.BorderWidth = 2;
+            series3.ChartArea = "ChartArea1";
+            series3.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+            series3.Legend = "Legend1";
+            series3.Name = "Series1";
+            this.ChartNormalM.Series.Add(series3);
+            this.ChartNormalM.Size = new System.Drawing.Size(504, 260);
+            this.ChartNormalM.TabIndex = 33;
+            this.ChartNormalM.Text = "chart1";
+            title3.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            title3.Name = "Main";
+            title3.Text = "Намагниченность";
+            this.ChartNormalM.Titles.Add(title3);
             // 
-            // TxtMKSH
+            // ChartNormalE
             // 
-            this.TxtMKSH.Location = new System.Drawing.Point(258, 42);
-            this.TxtMKSH.Name = "TxtMKSH";
-            this.TxtMKSH.Size = new System.Drawing.Size(45, 20);
-            this.TxtMKSH.TabIndex = 28;
-            this.TxtMKSH.Text = "100";
+            chartArea4.Name = "ChartArea1";
+            this.ChartNormalE.ChartAreas.Add(chartArea4);
+            legend4.Enabled = false;
+            legend4.Name = "Legend1";
+            this.ChartNormalE.Legends.Add(legend4);
+            this.ChartNormalE.Location = new System.Drawing.Point(749, 275);
+            this.ChartNormalE.Margin = new System.Windows.Forms.Padding(2);
+            this.ChartNormalE.Name = "ChartNormalE";
+            series4.BorderWidth = 2;
+            series4.ChartArea = "ChartArea1";
+            series4.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Point;
+            series4.Color = System.Drawing.Color.Orange;
+            series4.Legend = "Legend1";
+            series4.Name = "Series1";
+            this.ChartNormalE.Series.Add(series4);
+            this.ChartNormalE.Size = new System.Drawing.Size(504, 247);
+            this.ChartNormalE.TabIndex = 34;
+            this.ChartNormalE.Text = "chart1";
+            title4.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
+            title4.Name = "Main";
+            title4.Text = "Энергия";
+            this.ChartNormalE.Titles.Add(title4);
+            // 
+            // TimerNormal
+            // 
+            this.TimerNormal.Interval = 1;
+            this.TimerNormal.Tick += new System.EventHandler(this.TimerNormal_Tick);
+            // 
+            // groupBox5
+            // 
+            this.groupBox5.Controls.Add(this.TxtStepT);
+            this.groupBox5.Controls.Add(this.label15);
+            this.groupBox5.Controls.Add(this.TxtMaxT);
+            this.groupBox5.Controls.Add(this.label19);
+            this.groupBox5.Controls.Add(this.label20);
+            this.groupBox5.Controls.Add(this.TxtMinT);
+            this.groupBox5.Location = new System.Drawing.Point(665, 560);
+            this.groupBox5.Name = "groupBox5";
+            this.groupBox5.Size = new System.Drawing.Size(161, 95);
+            this.groupBox5.TabIndex = 30;
+            this.groupBox5.TabStop = false;
+            this.groupBox5.Text = "Нормализация";
+            // 
+            // TxtStepT
+            // 
+            this.TxtStepT.Location = new System.Drawing.Point(110, 67);
+            this.TxtStepT.Name = "TxtStepT";
+            this.TxtStepT.Size = new System.Drawing.Size(45, 20);
+            this.TxtStepT.TabIndex = 29;
+            this.TxtStepT.Text = "0.05";
+            // 
+            // label15
+            // 
+            this.label15.Location = new System.Drawing.Point(6, 67);
+            this.label15.Name = "label15";
+            this.label15.Size = new System.Drawing.Size(98, 20);
+            this.label15.TabIndex = 28;
+            this.label15.Text = "Шаг по Т";
+            this.label15.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // TxtMaxT
+            // 
+            this.TxtMaxT.Location = new System.Drawing.Point(110, 41);
+            this.TxtMaxT.Name = "TxtMaxT";
+            this.TxtMaxT.Size = new System.Drawing.Size(45, 20);
+            this.TxtMaxT.TabIndex = 27;
+            this.TxtMaxT.Text = "1.5";
+            // 
+            // label19
+            // 
+            this.label19.Location = new System.Drawing.Point(6, 41);
+            this.label19.Name = "label19";
+            this.label19.Size = new System.Drawing.Size(98, 20);
+            this.label19.TabIndex = 23;
+            this.label19.Text = "Максимальная Т";
+            this.label19.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // label20
+            // 
+            this.label20.Location = new System.Drawing.Point(9, 16);
+            this.label20.Name = "label20";
+            this.label20.Size = new System.Drawing.Size(90, 18);
+            this.label20.TabIndex = 22;
+            this.label20.Text = "Минимальная Т";
+            this.label20.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // TxtMinT
+            // 
+            this.TxtMinT.Location = new System.Drawing.Point(110, 16);
+            this.TxtMinT.Name = "TxtMinT";
+            this.TxtMinT.Size = new System.Drawing.Size(45, 20);
+            this.TxtMinT.TabIndex = 21;
+            this.TxtMinT.Text = "0.3";
             // 
             // Window
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(937, 705);
+            this.ClientSize = new System.Drawing.Size(1264, 824);
+            this.Controls.Add(this.groupBox5);
+            this.Controls.Add(this.ChartNormalE);
+            this.Controls.Add(this.ChartNormalM);
+            this.Controls.Add(this.BtnCalcNormal);
             this.Controls.Add(this.LabelPercent);
             this.Controls.Add(this.BarSpins);
             this.Controls.Add(this.groupBox4);
@@ -535,6 +692,10 @@
             this.groupBox2.PerformLayout();
             this.groupBox3.ResumeLayout(false);
             this.groupBox4.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ChartNormalM)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ChartNormalE)).EndInit();
+            this.groupBox5.ResumeLayout(false);
+            this.groupBox5.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -584,6 +745,17 @@
         private System.Windows.Forms.TextBox TxtMultiplierT;
         private System.Windows.Forms.Label label11;
         private System.Windows.Forms.TextBox TxtMKSH;
+        private System.Windows.Forms.Button BtnCalcNormal;
+        private System.Windows.Forms.DataVisualization.Charting.Chart ChartNormalM;
+        private System.Windows.Forms.DataVisualization.Charting.Chart ChartNormalE;
+        private System.Windows.Forms.Timer TimerNormal;
+        private System.Windows.Forms.GroupBox groupBox5;
+        private System.Windows.Forms.TextBox TxtMaxT;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox TxtMinT;
+        private System.Windows.Forms.Label label19;
+        private System.Windows.Forms.TextBox TxtStepT;
+        private System.Windows.Forms.Label label15;
     }
 }
 
