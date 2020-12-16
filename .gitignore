@@ -15,6 +15,13 @@
 *.userosscache
 *.sln.docstates
 
+# Binary files that are not related to project
+*.jpg
+*.png
+*.jpeg
+*.doc
+*.docx
+
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 

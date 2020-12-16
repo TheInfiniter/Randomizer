@@ -162,11 +162,11 @@ namespace Randomizer
             GetSpinsQuantity(_spins);
 
             // средняя намагниченность
-            //_normalM = GetNormalM(_spins);
+            _normalM = 0;
             labelMNorm.Text = _normalM.ToString();
 
             // средняя энергия
-            //_normalE = GetNormalE(_spins, _cellSize);
+            _normalE = 0;
             LabelENorm.Text = _normalE.ToString();
 
             // немного красоты на окошке
@@ -238,7 +238,7 @@ namespace Randomizer
             _temperature = double.Parse(TxtCritT.Text) * double.Parse(TxtMultiplierT.Text);
 
             // выполняется сразу куча шагов Метрополиса (иначе слишком медленно)
-            for (int i = 0; i < _interval; i++)
+            for (int i = 0; i < _quantity; i++)
             {
                 Metropolis(_temperature);
             }
