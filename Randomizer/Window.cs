@@ -704,6 +704,7 @@ namespace Randomizer
             _tempStop = double.Parse(TxtMaxT.Text);
             _tempStep = double.Parse(TxtStepT.Text);
             _criticalT = double.Parse(TxtCritT.Text);
+            _coefJ = double.Parse(TxtCoefJ.Text);
 
             ChartNormalE.Series[0].Points.Clear();
             ChartNormalM.Series[0].Points.Clear();
