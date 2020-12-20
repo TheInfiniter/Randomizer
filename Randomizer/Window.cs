@@ -6,6 +6,32 @@ using System.Windows.Forms;
 
 namespace Randomizer
 {
+    public struct NormalValue
+    {
+        public NormalValue(double M, double E, double T)
+        {
+            this.M = M;
+            this.E = E;
+            this.Temp = T;
+        }
+        public double Temp { get; set; }
+        public double M { get; set; }
+        public double E { get; set; }
+    }
+
+    public struct HeatSense
+    {
+        public HeatSense(double C, double H, double T)
+        {
+            this.C = C;
+            this.H = H;
+            this.Temp = T;
+        }
+        public double Temp { get; set; }
+        public double C { get; set; }
+        public double H { get; set; }
+    }
+
     public partial class Window : Form
     {
         Bitmap _bmp;
@@ -90,7 +116,8 @@ namespace Randomizer
         /// </summary>
         double _normalE;
 
-        List<NormalValue> _result;
+        List<NormalValue> _normals;
+        List<HeatSense> _heatsense;
         double _tempStart, _tempStop, _tempStep;
 
         Random rand;
@@ -219,18 +246,7 @@ namespace Randomizer
         //////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////
         //////////////////////////////////////////////////////////////////////
-        public struct NormalValue
-        {
-            public NormalValue(double M,double E,double T)
-            {
-                this.M = M;
-                this.E = E;
-                this.Temp = T;
-            }
-            public double Temp { get; set; }
-            public double M { get; set; }
-            public double E { get; set; }
-        }
+        
         
         private void TimerAnimate_Tick(object sender, EventArgs e)
         {
@@ -248,8 +264,8 @@ namespace Randomizer
 
             if (_metropolis > _requiredMKSH)
             {
-                _normalM = GetNormalM(_spins);
-                _normalE = GetNormalE(_spins, _cellSize);
+                _normalM = GetNormalM(_spins, false);
+                _normalE = GetNormalE(_spins, _cellSize, false);
             }
 
             // вычисляется средняя намагниченность и средняя энергия
@@ -382,7 +398,7 @@ namespace Randomizer
         /// </summary>
         /// <param name="spins">Состояние спинов.</param>
         /// <returns>Значение намагниченности.</returns>
-        private double GetNormalM(Spin[,] spins)
+        private double GetNormalM(Spin[,] spins, bool square)
         {
             int outerEdge = 1;
             double res = 0;
@@ -391,11 +407,18 @@ namespace Randomizer
             {
                 for (int j = outerEdge; j < spins.GetLength(1) - outerEdge; j++)
                 {
-                    res += spins[i, j].Sign;
+                    if (square)
+                    {
+                        res += Math.Pow(spins[i, j].Sign, 2);
+                    }
+                    else
+                    {
+                        res += spins[i, j].Sign;
+                    }
                 }
             }
 
-            return res;
+            return Math.Abs(res);
         }
 
         /// <summary>
@@ -404,7 +427,7 @@ namespace Randomizer
         /// <param name="spins">Состояние спинов.</param>
         /// <param name="size">Размер решетки спинов.</param>
         /// <returns>Значение энергии</returns>
-        private double GetNormalE(Spin[,] spins, int size)
+        private double GetNormalE(Spin[,] spins, int size, bool square)
         {
             int outerEdge = 0;
             double res = 0;
@@ -413,7 +436,14 @@ namespace Randomizer
             {
                 for (int j = outerEdge; j < size - outerEdge; j++)
                 {
-                    res += GetEnergy(spins, i, j, _coefJ, size - outerEdge);
+                    if (square)
+                    {
+                        res += Math.Pow(GetEnergy(spins, i, j, _coefJ, size - outerEdge), 2);
+                    }
+                    else
+                    {
+                        res += GetEnergy(spins, i, j, _coefJ, size - outerEdge);
+                    }
                 }
             }
             
@@ -626,28 +656,28 @@ namespace Randomizer
         /// Получить значение теплоемкости.
         /// </summary>
         /// <returns></returns>
-        private double GetHeatCapacity()
+        private double GetHeatCapacity(int amount, double temp, double eSquare, double squareE)
         {
-            throw new NotImplementedException();
+            return 1 / ((double)amount * (double)amount) * 1 / (temp * temp) * (eSquare - squareE);
         }
 
         /// <summary>
         /// Получить значение магнитной восприимчивости.
         /// </summary>
         /// <returns></returns>
-        private double GetMagneticSensibility()
+        private double GetMagneticSensibility(int amount, double temp, double mSquare, double squareM)
         {
-            throw new NotImplementedException();
+            return 1 / ((double)amount * (double)amount) * 1 / (temp) * (mSquare - squareM);
         }
 
         private void TimerNormal_Tick(object sender, EventArgs e)
         {
-            Recursion(_result, _tempStart);
+            CountNormals(_normals, _tempStart);
 
-            int count = _result.Count;
+            int count = _normals.Count;
 
-            ChartNormalM.Series[0].Points.AddXY(_result[count - 1].Temp, _result[count - 1].M);
-            ChartNormalE.Series[0].Points.AddXY(_result[count - 1].Temp, _result[count - 1].E);
+            ChartNormalM.Series[0].Points.AddXY(_normals[count - 1].Temp, _normals[count - 1].M);
+            ChartNormalE.Series[0].Points.AddXY(_normals[count - 1].Temp, _normals[count - 1].E);
 
             _tempStart += _tempStep;
 
@@ -658,15 +688,28 @@ namespace Randomizer
             }
         }
 
-        private void Recursion(List<NormalValue> result, double temp)
+        private void TimerHeat_Tick(object sender, EventArgs e)
         {
-            /*
-            double tempStart = 0.3;
-            double tempStop = 1.5;
-            List<NormalValue> result = new List<NormalValue>();
-            */
-            double normalM = 0;
-            double normalE = 0;
+            CountHeat(_heatsense, _tempStart);
+
+            int count = _heatsense.Count;
+
+            ChartHeat.Series[0].Points.AddXY(_heatsense[count - 1].Temp, _heatsense[count - 1].C);
+            ChartSense.Series[0].Points.AddXY(_heatsense[count - 1].Temp, _heatsense[count - 1].H);
+
+            _tempStart += _tempStep;
+
+            if (_tempStart > _tempStop)
+            {
+                TimerHeat.Stop();
+                BtnHeat.Enabled = true;
+            }
+        }
+
+        private void CountHeat(List<HeatSense> heats, double temp)
+        {
+            double heat, sense;
+            double mSquare, squareM, eSquare, squareE;
 
             temp *= _criticalT;
 
@@ -678,27 +721,58 @@ namespace Randomizer
                 }
             }
 
-            normalM = Math.Abs(GetNormalM(_spins)) / _quantity;
-            normalE = GetNormalE(_spins, _cellSize) / _quantity;
-            result.Add(new NormalValue(normalM, normalE, temp));
-            //tempStart += 0.05;
+            mSquare = GetNormalM(_spins, true) / _quantity;
+            squareM = Math.Pow(GetNormalM(_spins, false) / _quantity, 2);
 
-            /*
-            while (tempStart < tempStop)
+            eSquare = GetNormalE(_spins, _cellSize, true) / _quantity;
+            squareE = Math.Pow(GetNormalE(_spins, _cellSize, false), 2) / _quantity;
+
+            heat = GetHeatCapacity(_actualSize, temp, eSquare, squareE);
+            sense = GetMagneticSensibility(_actualSize, temp, mSquare, squareM);
+
+            heats.Add(new HeatSense(heat, sense, temp));
+        }
+
+        private void BtnHeat_Click(object sender, EventArgs e)
+        {
+            _heatsense = new List<HeatSense>();
+
+            _tempStart = double.Parse(TxtMinT.Text);
+            _tempStop = double.Parse(TxtMaxT.Text);
+            _tempStep = double.Parse(TxtStepT.Text);
+            _criticalT = double.Parse(TxtCritT.Text);
+            _coefJ = double.Parse(TxtCoefJ.Text);
+
+            ChartSense.Series[0].Points.Clear();
+            ChartHeat.Series[0].Points.Clear();
+
+            TimerHeat.Start();
+            BtnHeat.Enabled = false;
+        }
+
+        private void CountNormals(List<NormalValue> result, double temp)
+        {
+            double normalM;
+            double normalE;
+
+            temp *= _criticalT;
+
+            for (int i = 0; i < Convert.ToInt32(TxtMKSH.Text); i++)
             {
-                
+                for (int j = 0; j < Convert.ToInt32(TxtInterval.Text); j++)
+                {
+                    Metropolis(temp);
+                }
             }
-            
-            for (int j = 0; j < result.Count; j++)
-            {
-                ChartNormalM.Series[0].Points.AddXY(result[j].Temp, result[j].M);
-            }
-            */
+
+            normalM = Math.Abs(GetNormalM(_spins, false)) / _quantity;
+            normalE = GetNormalE(_spins, _cellSize, false) / _quantity;
+            result.Add(new NormalValue(normalM, normalE, temp));
         }
 
         private void BtnCalcNormal_Click(object sender, EventArgs e)
         {
-            _result = new List<NormalValue>();
+            _normals = new List<NormalValue>();
 
             _tempStart = double.Parse(TxtMinT.Text);
             _tempStop = double.Parse(TxtMaxT.Text);
@@ -711,7 +785,6 @@ namespace Randomizer
 
             TimerNormal.Start();
             BtnCalcNormal.Enabled = false;
-            //Recursion();
         }
     }
 }
