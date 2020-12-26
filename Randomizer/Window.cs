@@ -694,8 +694,12 @@ namespace Randomizer
 
             int count = _heatsense.Count;
 
-            ChartHeat.Series[0].Points.AddXY(_heatsense[count - 1].Temp, _heatsense[count - 1].C);
-            ChartSense.Series[0].Points.AddXY(_heatsense[count - 1].Temp, _heatsense[count - 1].H);
+            if(_heatsense[count - 1].Temp >= 1.57)
+            {
+                ChartHeat.Series[0].Points.AddXY(_heatsense[count - 1].Temp, _heatsense[count - 1].C);
+                ChartSense.Series[0].Points.AddXY(_heatsense[count - 1].Temp, _heatsense[count - 1].H);
+            }
+            
 
             _tempStart += _tempStep;
 
@@ -722,10 +726,10 @@ namespace Randomizer
             }
 
             mSquare = GetNormalM(_spins, true) / _quantity;
-            squareM = Math.Pow(GetNormalM(_spins, false) / _quantity, 2);
+            squareM = Math.Pow(GetNormalM(_spins, false), 2) / _quantity;
 
             eSquare = GetNormalE(_spins, _cellSize, true) / _quantity;
-            squareE = Math.Pow(GetNormalE(_spins, _cellSize, false), 2) / _quantity;
+            squareE = Math.Pow(GetNormalE(_spins, _cellSize, false) / _quantity, 2);
 
             heat = GetHeatCapacity(_actualSize, temp, eSquare, squareE);
             sense = GetMagneticSensibility(_actualSize, temp, mSquare, squareM);
